@@ -11,6 +11,10 @@
     "virtual",
     "xreditorsubsystem"
   ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Josh-Jun/UPM/tree/PicoTools"
+  },
   "dependencies": {
     "com.unity.xr.picoxr": "2.0.5",
     "com.unity.xr.management": "3.2.16",

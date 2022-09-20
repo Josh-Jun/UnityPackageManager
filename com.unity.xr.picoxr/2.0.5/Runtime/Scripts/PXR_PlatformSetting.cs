@@ -46,7 +46,7 @@ namespace Unity.XR.PXR
                 if (instance == null)
                 {
 
-                    instance = Resources.Load<PXR_PlatformSetting>("PXR_PlatformSetting");
+                    instance = Resources.Load<PXR_PlatformSetting>("PXR/PXR_PlatformSetting");
 #if UNITY_EDITOR
                     string path = Application.dataPath + "/Resources";
                     if (!Directory.Exists(path))

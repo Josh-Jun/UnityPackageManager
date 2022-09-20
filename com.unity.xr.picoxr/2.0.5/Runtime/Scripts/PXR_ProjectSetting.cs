@@ -21,7 +21,7 @@ namespace Unity.XR.PXR
         public bool useContentProtect;
         public static PXR_ProjectSetting GetProjectConfig()
         {
-            PXR_ProjectSetting projectConfig = Resources.Load<PXR_ProjectSetting>("PXR_ProjectSetting");
+            PXR_ProjectSetting projectConfig = Resources.Load<PXR_ProjectSetting>("PXR/PXR_ProjectSetting");
 #if UNITY_EDITOR
             if (projectConfig == null)
             {

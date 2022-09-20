@@ -100,16 +100,7 @@ namespace Pico.Tools
         {
             transform.Find("XR Origin").GetComponent<Unity.XR.CoreUtils.XROrigin>().Origin = go;
         }
-
-        public void CameraScreenFade(bool isFade, float time, Action callback = null)
-        {
-            PXR_ScreenFade screenFade = MainCamera.GetComponent<PXR_ScreenFade>();
-            screenFade.fadeTime = time;
-            float startAlpha = isFade ? 0f : 1f;
-            float endAlpha = !isFade ? 0f : 1f;
-            screenFade.StartScreenFade(startAlpha, endAlpha, callback);
-        }
-
+        
         public void SetControllerVibration(float strength, int time, PXR_Input.Controller controller)
         {
             PXR_Input.SetControllerVibration(strength, time, controller);

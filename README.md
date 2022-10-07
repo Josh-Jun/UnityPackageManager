@@ -26,7 +26,7 @@ https://github.com/Josh-Jun/UPM.git#sougouvrkeyboard/1.0.0
 
 ---
 
-# STDebug
+# SRDebug
 https://github.com/Josh-Jun/UPM.git#srdebug/1.11.0
 
 ---

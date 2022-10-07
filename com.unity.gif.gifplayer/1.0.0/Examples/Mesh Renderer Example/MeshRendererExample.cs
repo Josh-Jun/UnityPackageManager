@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 
 // This script is just used to rotate the cube
 public class MeshRendererExample : MonoBehaviour {

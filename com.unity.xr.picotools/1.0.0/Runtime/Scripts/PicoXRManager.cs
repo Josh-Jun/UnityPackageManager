@@ -1,11 +1,13 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.XR.CoreUtils;
 using Unity.XR.PXR;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.XR.Interaction.Toolkit;
 using UnityEngine.XR;
+using UnityEngine.XR.Interaction.Toolkit.Samples.StarterAssets;
 
 namespace Pico.Tools
 {
@@ -26,27 +28,20 @@ namespace Pico.Tools
             }
         }
 
-        private GameObject locomotionSystem;
+        private XROrigin origin;
         private XRInteractionManager _interactionManager;
-        private ActionBasedControllerManager leftHand;
-        private ActionBasedControllerManager rightHand;
-        private XRRayInteractor leftXRRayInteractor;
-        private XRRayInteractor rightXRRayInteractor;
+        private XRRayInteractor leftHand;
+        private XRRayInteractor rightHand;
         private Camera _mainCamera;
 
+        public XROrigin XROrigin
+        {
+            get { return origin; }
+        }
+        
         public XRInteractionManager InteractionManager
         {
             get { return _interactionManager; }
-        }
-
-        public GameObject LeftController
-        {
-            get { return leftHand.baseControllerGameObject; }
-        }
-
-        public GameObject RightController
-        {
-            get { return rightHand.baseControllerGameObject; }
         }
 
         public Camera MainCamera
@@ -56,51 +51,18 @@ namespace Pico.Tools
 
         private void Awake()
         {
-            leftHand = transform.Find("XR Origin/Camera Offset/LeftHand").GetComponent<ActionBasedControllerManager>();
-            rightHand = transform.Find("XR Origin/Camera Offset/RightHand")
-                .GetComponent<ActionBasedControllerManager>();
-            _interactionManager = transform.Find("XR Interaction Manager").GetComponent<XRInteractionManager>();
-            locomotionSystem = transform.Find("Locomotion System").gameObject;
-            _mainCamera = transform.Find("XR Origin/Camera Offset/Main Camera").GetComponent<Camera>();
-            leftXRRayInteractor = LeftController.GetComponent<XRRayInteractor>();
-            rightXRRayInteractor = RightController.GetComponent<XRRayInteractor>();
+            origin = transform.Find("XR Origin").GetComponent<XROrigin>();
+            leftHand = transform.Find("XR Origin/Camera Offset/LeftHand (Smooth locomotion)/Ray Interactor").GetComponent<XRRayInteractor>();
+            rightHand = transform.Find("XR Origin/Camera Offset/RightHand (Smooth locomotion)/Ray Interactor").GetComponent<XRRayInteractor>();
+            _interactionManager = transform.Find("InteractionManager").GetComponent<XRInteractionManager>();
+            _mainCamera = origin.Camera;
         }
 
         private void Start()
         {
-            SetBaseController(false);
-            SetTeleportController(false);
-            //SetTeleportEnable(false);
-#if UNITY_EDITOR
-            LeftController.SetActive(false);
-            RightController.SetActive(false);
-#endif
+            
         }
 
-        public void SetBaseController(bool enable)
-        {
-            leftHand.SetBaseController(enable);
-            rightHand.SetBaseController(enable);
-        }
-
-        public void SetTeleportController(bool enable)
-        {
-            leftHand.SetTeleportController(enable);
-            rightHand.SetTeleportController(enable);
-        }
-
-        public void SetTeleportEnable(bool enable)
-        {
-            locomotionSystem.GetComponent<TeleportationProvider>().enabled = enable;
-            locomotionSystem.GetComponent<ActionBasedSnapTurnProvider>().enabled = enable;
-            locomotionSystem.GetComponent<ActionBasedContinuousMoveProvider>().enabled = enable;
-        }
-
-        public void SetBaseOrigin(GameObject go)
-        {
-            transform.Find("XR Origin").GetComponent<Unity.XR.CoreUtils.XROrigin>().Origin = go;
-        }
-        
         public void SetControllerVibration(float strength, int time, PXR_Input.Controller controller)
         {
             PXR_Input.SetControllerVibration(strength, time, controller);
@@ -228,14 +190,14 @@ namespace Pico.Tools
         {
             #region RaycastTarget
 
-            if (leftXRRayInteractor != null)
+            if (leftHand != null)
             {
-                leftXRRayInteractor.TryGetCurrent3DRaycastHit(out leftRaycastHit);
+                leftHand.TryGetCurrent3DRaycastHit(out leftRaycastHit);
             }
 
-            if (rightXRRayInteractor != null)
+            if (rightHand != null)
             {
-                rightXRRayInteractor.TryGetCurrent3DRaycastHit(out rightRaycastHit);
+                rightHand.TryGetCurrent3DRaycastHit(out rightRaycastHit);
             }
 
             #endregion

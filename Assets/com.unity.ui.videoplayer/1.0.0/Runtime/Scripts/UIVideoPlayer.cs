@@ -36,8 +36,10 @@ namespace UnityEngine.Video.UI
     public class UIVideoPlayer : MonoBehaviour
     {
         public VideoPlayer VideoPlayer;
+        public VideoPlayer TipVideoPlayer;
         private RawImage _videoDisplay;
         private RenderTexture movie;
+        private RenderTexture tip_movie;
 
         [Header("Options")] [SerializeField] float _keyVolumeDelta = 0.05f;
         [SerializeField] float _jumpDeltaTime = 5f;
@@ -97,6 +99,7 @@ namespace UnityEngine.Video.UI
         private void Awake()
         {
             movie = new RenderTexture(1920, 1080, 24);
+            tip_movie = new RenderTexture(1920, 1080, 24);
             _videoDisplay = _videoTouch.gameObject.GetComponent<RawImage>();
             _tipDisplay = _timelineTip.Find("HoverThumbnail").GetComponent<RawImage>();
         }
@@ -114,6 +117,14 @@ namespace UnityEngine.Video.UI
             VideoPlayer.frameReady += OnFrameReady;
             VideoPlayer.errorReceived += OnErrorReceived;
 
+            TipVideoPlayer.source = VideoPlayer.source;
+            TipVideoPlayer.url = VideoPlayer.url;
+            TipVideoPlayer.clip = VideoPlayer.clip;
+            TipVideoPlayer.sendFrameReadyEvents = VideoPlayer.sendFrameReadyEvents;
+            TipVideoPlayer.renderMode = VideoPlayer.renderMode;
+            TipVideoPlayer.targetTexture = tip_movie;
+            TipVideoPlayer.prepareCompleted += OnTipPrepareCompleted;
+            
             SetupPlayPauseButton();
             SetupTimeBackForwardButtons();
             SetupVolumeButton();
@@ -263,6 +274,9 @@ namespace UnityEngine.Video.UI
                             hoverText.text = string.Format("{0:00}:{1:00}", (int)(time / 60), (int)(time % 60));
                         }
 
+                        TipVideoPlayer.time = time;
+                        TipVideoPlayer.Pause();
+
                         // Update seek segment when hovering over timeline
                         if (_segmentsSeek != null)
                         {
@@ -387,7 +401,7 @@ namespace UnityEngine.Video.UI
             // Update buffered segments
             if (_segmentsBuffered)
             {
-                double t = (VideoPlayer.time / VideoPlayer.length);
+                double t = ((double)VideoPlayer.frame / VideoPlayer.frameCount);
                 float[] ranges = new float[2];
                 ranges[1] = (float)t;
                 ranges[0] = 0;
@@ -447,6 +461,10 @@ namespace UnityEngine.Video.UI
         public void OnPrepareCompleted(VideoPlayer player)
         {
             _videoDisplay.texture = player.targetTexture;
+        }
+        // 准备完成事件调用
+        public void OnTipPrepareCompleted(VideoPlayer player)
+        {
             _tipDisplay.texture = player.targetTexture;
         }
 

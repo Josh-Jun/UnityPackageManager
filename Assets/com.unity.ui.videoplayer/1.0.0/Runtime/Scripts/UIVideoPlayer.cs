@@ -1,3 +1,4 @@
+using System;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
@@ -118,9 +119,18 @@ namespace UnityEngine.Video.UI
             VideoPlayer.errorReceived += OnErrorReceived;
 
             TipVideoPlayer.source = VideoPlayer.source;
-            TipVideoPlayer.url = VideoPlayer.url;
-            TipVideoPlayer.clip = VideoPlayer.clip;
-            TipVideoPlayer.sendFrameReadyEvents = VideoPlayer.sendFrameReadyEvents;
+            switch (TipVideoPlayer.source)
+            {
+                case VideoSource.Url:
+                    TipVideoPlayer.url = VideoPlayer.url;
+                    break;
+                case VideoSource.VideoClip:
+                    TipVideoPlayer.clip = VideoPlayer.clip;
+                    break;
+                default:
+                    break;
+            }
+            TipVideoPlayer.sendFrameReadyEvents = true;
             TipVideoPlayer.renderMode = VideoPlayer.renderMode;
             TipVideoPlayer.targetTexture = tip_movie;
             TipVideoPlayer.prepareCompleted += OnTipPrepareCompleted;

@@ -169,6 +169,7 @@ public class GifPlayer : MonoBehaviour
 
     private void Awake()
     {
+        EnableComponent(false);
         //init the AnimatedGifPlayer
         if (State == GifPlayerState.PreProcessing) Init();
     }
@@ -410,6 +411,43 @@ public class GifPlayer : MonoBehaviour
         GifTexture.hideFlags = HideFlags.HideAndDontSave;
     }
 
+    // Used to determine the target component if not set
+    private void EnableComponent(bool enable)
+    {
+        if (_targetComponent == null) return;
+
+        // SpriteRenderer
+        if (_targetComponent is SpriteRenderer)
+        {
+            var target = (SpriteRenderer)_targetComponent;
+            target.enabled = enable;
+            return;
+        }
+
+        // Renderer
+        if (_targetComponent is Renderer)
+        {
+            var target = (Renderer)_targetComponent;
+            target.enabled = enable;
+            return;
+        }
+
+        // RawImage
+        if (_targetComponent is RawImage)
+        {
+            var target = (RawImage)_targetComponent;
+            target.enabled = enable;
+            return;
+        }
+
+        // Image
+        if (_targetComponent is Image)
+        {
+            var target = (Image)_targetComponent;
+            target.enabled = enable;
+            return;
+        }
+    }
 
     // Used to determine the target component if not set
     private void SetTexture()
@@ -697,6 +735,7 @@ public class GifPlayer : MonoBehaviour
             SetTexture();
             lock (_locker) UpdateFrame();
             _hasFirstFrameBeenShown = true;
+            EnableComponent(true);
             return;
         }
 

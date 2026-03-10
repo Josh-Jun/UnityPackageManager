@@ -1,5 +1,21 @@
 {
   "dependencies": {
+    "com.lvlvlv.gifplayer": {
+      "version": "file:GifPlayer",
+      "depth": 0,
+      "source": "embedded",
+      "dependencies": {
+        "com.unity.ugui": "1.0.0"
+      }
+    },
+    "com.lvlvlv.videoplayer": {
+      "version": "file:UIVideoPlayer",
+      "depth": 0,
+      "source": "embedded",
+      "dependencies": {
+        "com.unity.ugui": "1.0.0"
+      }
+    },
     "com.unity.collab-proxy": {
       "version": "2.7.1",
       "depth": 0,

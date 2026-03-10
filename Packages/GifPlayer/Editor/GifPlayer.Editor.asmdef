@@ -1,0 +1,18 @@
+{
+    "name": "GifPlayer.Editor",
+    "rootNamespace": "",
+    "references": [
+        "GUID:bc7293103859a3c43894105d02358aed"
+    ],
+    "includePlatforms": [
+        "Editor"
+    ],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

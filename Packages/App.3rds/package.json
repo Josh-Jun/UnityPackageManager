@@ -1,0 +1,16 @@
+{
+  "name": "com.lvlvlv.3rds",
+  "displayName": "App.3rds",
+  "version": "0.0.1",
+  "unity": "2022.3",
+  "description": "App Third Party Library",
+  "author": {
+    "name": "Josh-Jun",
+    "url": "https://github.com/Josh-Jun/"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Josh-Jun/UnityAppFramework"
+  },
+  "relatedPackages": {}
+}

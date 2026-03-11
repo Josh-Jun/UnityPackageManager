@@ -44,6 +44,14 @@
         "com.unity.ugui": "1.0.0"
       }
     },
+    "com.lvlvlv.uideoplayer": {
+      "version": "file:UIVideoPlayer",
+      "depth": 0,
+      "source": "embedded",
+      "dependencies": {
+        "com.unity.ugui": "1.0.0"
+      }
+    },
     "com.lvlvlv.videoplayer": {
       "version": "file:UIVideoPlayer",
       "depth": 0,

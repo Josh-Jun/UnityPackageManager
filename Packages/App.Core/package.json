@@ -1,0 +1,27 @@
+{
+  "name": "com.lvlvlv.app",
+  "displayName": "App.Core",
+  "version": "0.0.1",
+  "unity": "2022.3",
+  "description": "Unity App Framework",
+  "author": {
+    "name": "Josh-Jun",
+    "url": "https://github.com/Josh-Jun/"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Josh-Jun/UnityPackageManager"
+  },
+  "dependencies": {
+    "com.lvlvlv.3rds": "0.0.1",
+    "com.lvlvlv.gifplayer": "1.0.0",
+    "com.lvlvlv.videoplayer": "1.0.0",
+    "com.cysharp.unitask": "2.5.10",
+    "com.code-philosophy.hybridclr": "8.11.0",
+    "com.tuyoogame.yooasset": "2.3.18",
+    "com.unity.cinemachine": "2.10.6",
+    "com.unity.scriptablebuildpipeline": "1.21.25",
+    "com.unity.assetbundlebrowser": "1.7.0"
+  },
+  "relatedPackages": {}
+}

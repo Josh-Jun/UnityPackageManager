@@ -7,11 +7,34 @@
       "dependencies": {},
       "hash": "4feac30cb2e105992986c737f7f54992b8300e1a"
     },
+    "com.cysharp.unitask": {
+      "version": "https://github.com/Cysharp/UniTask.git?path=src/UniTask/Assets/Plugins/UniTask",
+      "depth": 0,
+      "source": "git",
+      "dependencies": {},
+      "hash": "a9e27c03d411d2fca01cc7410c24c97cd77cb539"
+    },
     "com.lvlvlv.3rds": {
       "version": "file:App.3rds",
       "depth": 0,
       "source": "embedded",
       "dependencies": {}
+    },
+    "com.lvlvlv.app": {
+      "version": "file:App.Core",
+      "depth": 0,
+      "source": "embedded",
+      "dependencies": {
+        "com.lvlvlv.3rds": "0.0.1",
+        "com.lvlvlv.gifplayer": "1.0.0",
+        "com.lvlvlv.videoplayer": "1.0.0",
+        "com.cysharp.unitask": "2.5.10",
+        "com.code-philosophy.hybridclr": "8.11.0",
+        "com.tuyoogame.yooasset": "2.3.18",
+        "com.unity.cinemachine": "2.10.6",
+        "com.unity.scriptablebuildpipeline": "1.21.25",
+        "com.unity.assetbundlebrowser": "1.7.0"
+      }
     },
     "com.lvlvlv.gifplayer": {
       "version": "file:GifPlayer",
@@ -41,6 +64,13 @@
       },
       "url": "https://package.openupm.com"
     },
+    "com.unity.assetbundlebrowser": {
+      "version": "https://github.com/Unity-Technologies/AssetBundles-Browser.git",
+      "depth": 0,
+      "source": "git",
+      "dependencies": {},
+      "hash": "c7923746fa5e95916bf1a4087eceadb72305d5b5"
+    },
     "com.unity.burst": {
       "version": "1.8.21",
       "depth": 1,
@@ -48,6 +78,15 @@
       "dependencies": {
         "com.unity.mathematics": "1.2.1",
         "com.unity.modules.jsonserialize": "1.0.0"
+      },
+      "url": "https://packages.unity.com"
+    },
+    "com.unity.cinemachine": {
+      "version": "2.10.6",
+      "depth": 0,
+      "source": "registry",
+      "dependencies": {
+        "com.unity.test-framework": "1.1.31"
       },
       "url": "https://packages.unity.com"
     },

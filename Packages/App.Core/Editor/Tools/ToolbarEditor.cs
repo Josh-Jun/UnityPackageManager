@@ -358,8 +358,8 @@ namespace App.Editor.Tools
         
         private static void UnCompressionTools()
         {
-            var basePath = Path.GetFullPath("Packages/com.lvlvlv.app");
-            var zipFilePath = Path.Combine(basePath, "tools.zip");
+            var basePath = Path.GetFullPath("Packages/com.lvlvlv.app/Editor/Tools/Zip");
+            var zipFilePath = Path.Combine(basePath, "Tools.zip");
             var extractPath = $"{Directory.GetParent(Application.dataPath)}";
             try
             {

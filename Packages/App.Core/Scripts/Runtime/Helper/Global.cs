@@ -2,6 +2,8 @@ using System.Collections.Generic;
 using System.Reflection;
 using App.Runtime.CloudCtrl;
 using App.Runtime.Helper;
+using UnityEngine;
+
 
 public static partial class Global
 {

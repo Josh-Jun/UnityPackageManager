@@ -104,7 +104,7 @@ namespace App.Editor.Tools
         {
             sb.Length = 0;
             var files = new List<FileInfo>();
-            sb.AppendLine("public class AssetPath");
+            sb.AppendLine("public partial class AssetPath");
             sb.AppendLine("{");
             
             GetConst("Builtin", ref sb);

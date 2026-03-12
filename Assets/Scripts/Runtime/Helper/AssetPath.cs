@@ -1,3 +1,3 @@
-public class AssetPath
+public partial class AssetPath
 {
 }

@@ -14,12 +14,12 @@ namespace SRDebugger.Editor
         private static readonly string[] _resourcePaths = new[]
         {
             "Resources",
-            "usr",
             "UI/Prefabs"
         };
 
         static void SetResourcesEnabled(bool enable)
         {
+            return;
             AssetDatabase.StartAssetEditing();
 
             foreach (ResourceDirectory d in GetResourcePaths())

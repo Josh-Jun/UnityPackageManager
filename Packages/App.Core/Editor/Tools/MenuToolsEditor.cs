@@ -165,8 +165,7 @@ namespace App.Editor.Tools
             if (!Directory.Exists(path)) return fileInfos;
             var direction = new DirectoryInfo(path);
             var files = direction.GetFiles("*", SearchOption.AllDirectories);
-            fileInfos.AddRange(files.Where(t => !IgnoreExtensions.Contains(t.Extension)));
-            fileInfos.AddRange(files.Where(t => !FileExtensions.Contains(t.Name)));
+            fileInfos.AddRange(files.Where(file => !IgnoreExtensions.Contains(file.Extension)).Where(file => !FileExtensions.Contains(file.Name)));
             return fileInfos;
         }
         

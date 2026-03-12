@@ -11,7 +11,7 @@ namespace App.Runtime
     {
         private const string APP_CONFIG_PATH = "AppConfig";
         private CancellationTokenSource cancel = new();
-        private readonly bool CanMoveNext = true;
+        private bool CanMoveNext = true;
 
         private void Awake()
         {

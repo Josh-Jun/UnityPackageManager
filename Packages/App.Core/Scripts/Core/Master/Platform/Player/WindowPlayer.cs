@@ -2,7 +2,7 @@
 
 namespace App.Core.Master
 {
-    public partial class WindowPlayer : PlatformMaster
+    public class WindowPlayer : PlatformMaster
     {
         public override bool IsEditor { get; } = false;
         public override string Name { get; } = "Windows";
@@ -19,14 +19,21 @@ namespace App.Core.Master
         
         public override void OpenAppSetting()
         {
-            Log.I("OpenAppSetting MacOS");
+            Log.I("OpenAppSetting Window");
         }
 
         public override void RequestUserPermission(string permission)
         {
             Log.I("RequestUserPermission", ("Permission", permission));
         }
-
+        public override void WeChatPay(string appId, string partnerId, string prepayId, string nonceStr, string timeStamp, string package, string sign)
+        {
+            Log.I("WeChatPay Window");
+        }
+        public override void AliPay(string payOrder, string scheme)
+        {
+            Log.I("AliPay Window");
+        }
         public override string GetDataPath(string folder)
         {
             return $"{Application.dataPath.Replace("/Assets", "")}/{folder}";

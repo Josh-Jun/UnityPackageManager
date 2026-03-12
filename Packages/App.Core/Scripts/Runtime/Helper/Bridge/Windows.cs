@@ -7,7 +7,7 @@
  * ===============================================
  * */
 
-public class Windows
+public partial class Windows
 {
 #if UNITY_STANDALONE_WIN && !UNITY_EDITOR
     public static bool StartProcess(string exePath, string args)

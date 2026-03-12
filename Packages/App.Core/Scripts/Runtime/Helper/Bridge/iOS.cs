@@ -7,7 +7,7 @@
  * ===============================================
  * */
 
-public class iOS
+public partial class iOS
 {
 #if UNITY_IOS && !UNITY_EDITOR
         [System.Runtime.InteropServices.DllImport("__Internal")]

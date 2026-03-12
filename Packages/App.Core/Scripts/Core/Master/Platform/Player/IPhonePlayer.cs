@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace App.Core.Master
 {
-    public partial class IPhonePlayer : PlatformMaster
+    public class IPhonePlayer : PlatformMaster
     {
         public override bool IsEditor { get; } = false;
         public override string Name { get; } = "iOS";
@@ -12,6 +12,26 @@ namespace App.Core.Master
         public IPhonePlayer()
         {
             PlatformMsgReceiver.Instance.Init();
+        }
+        
+        public override void WeChatPay(string appId, string partnerId, string prepayId, string nonceStr, string timeStamp, string package, string sign)
+        {
+            Log.I("WeChatPay IPhone");
+            
+#if UNITY_IOS && !UNITY_EDITOR
+            //先注册微信
+            iOS.IOSRegisterWxApi(AppHelper.WeChatAppKey, AppHelper.WeChatAppUniversalLink);
+            //然后调用微信支付
+            iOS.IOSWxPay(appId, partnerId, prepayId, nonceStr, timeStamp, package, sign);
+#endif
+        }
+        
+        public override void AliPay(string payOrder, string scheme)
+        {
+            Log.I("AliPay IPhone");
+#if UNITY_IOS && !UNITY_EDITOR
+            iOS.IOSAliPay(payOrder, scheme);
+#endif
         }
         
         public override void SendMsgToNative(string msg)

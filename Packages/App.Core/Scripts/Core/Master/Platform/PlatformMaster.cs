@@ -2,7 +2,7 @@
 
 namespace App.Core.Master
 {
-    public abstract partial class PlatformMaster
+    public abstract class PlatformMaster
     {
         private static PlatformMaster _instance;
 
@@ -24,6 +24,9 @@ namespace App.Core.Master
                 return _instance;
             }
         }
+
+        public abstract void WeChatPay(string appId, string partnerId, string prepayId, string nonceStr, string timeStamp, string package, string sign);
+        public abstract void AliPay(string payOrder, string scheme);
 
         public abstract bool IsEditor { get; }
         public abstract string Name { get; }

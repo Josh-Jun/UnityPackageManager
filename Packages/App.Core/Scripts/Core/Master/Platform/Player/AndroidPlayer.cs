@@ -4,7 +4,7 @@ using UnityEngine.Android;
 
 namespace App.Core.Master
 {
-    public partial class AndroidPlayer : PlatformMaster
+    public class AndroidPlayer : PlatformMaster
     {
         private const string AppMainPackage = "com.unity3d.player.UnityPlayer";
         private const string AppToolsPackage = "com.debug.tools.AndroidHelper";
@@ -24,13 +24,11 @@ namespace App.Core.Master
         {
             get
             {
-                if (_permissionCallbacks == null)
-                {
-                    _permissionCallbacks = new PermissionCallbacks();
-                    _permissionCallbacks.PermissionGranted += OnGranted;
-                    _permissionCallbacks.PermissionDenied += OnDenied;
-                    _permissionCallbacks.PermissionDeniedAndDontAskAgain += OnDeniedAndDontAskAgain;
-                }
+                if (_permissionCallbacks != null) return _permissionCallbacks;
+                _permissionCallbacks = new PermissionCallbacks();
+                _permissionCallbacks.PermissionGranted += OnGranted;
+                _permissionCallbacks.PermissionDenied += OnDenied;
+                _permissionCallbacks.PermissionDeniedAndDontAskAgain += OnDeniedAndDontAskAgain;
                 return _permissionCallbacks;
             }
         }
@@ -61,6 +59,20 @@ namespace App.Core.Master
 #endif
         }
 
+        public override void WeChatPay(string appId, string partnerId, string prepayId, string nonceStr, string timeStamp, string package, string sign)
+        {
+            Log.I("WeChatPay Android");
+#if UNITY_ANDROID && !UNITY_EDITOR
+            
+#endif
+        }
+        public override void AliPay(string payOrder, string scheme)
+        {
+            Log.I("AliPay Android");
+#if UNITY_IOS && !UNITY_EDITOR
+            
+#endif
+        }
         public override void OpenAppSetting()
         {
             Log.I("OpenAppSetting Android");

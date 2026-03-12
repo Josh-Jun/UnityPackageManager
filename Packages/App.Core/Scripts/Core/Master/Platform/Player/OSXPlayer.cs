@@ -2,7 +2,7 @@
 
 namespace App.Core.Master
 {
-    public partial class OSXPlayer : PlatformMaster
+    public class OSXPlayer : PlatformMaster
     {
         public override bool IsEditor { get; } = false;
         public override string Name { get; } = "MacOS";
@@ -26,7 +26,14 @@ namespace App.Core.Master
         {
             Log.I("RequestUserPermission", ("Permission", permission));
         }
-
+        public override void WeChatPay(string appId, string partnerId, string prepayId, string nonceStr, string timeStamp, string package, string sign)
+        {
+            Log.I("WeChatPay MacOS");
+        }
+        public override void AliPay(string payOrder, string scheme)
+        {
+            Log.I("AliPay MacOS");
+        }
         public override string GetDataPath(string folder)
         {
             return $"{Application.dataPath.Replace("Assets", "")}{folder}";

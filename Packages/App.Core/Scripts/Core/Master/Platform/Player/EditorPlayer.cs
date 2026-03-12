@@ -5,7 +5,7 @@ using UnityEditor;
 
 namespace App.Core.Master
 {
-    public partial class EditorPlayer : PlatformMaster
+    public class EditorPlayer : PlatformMaster
     {
         public override bool IsEditor { get; } = true;
         public override string Name { get; } = "Android";
@@ -30,7 +30,14 @@ namespace App.Core.Master
         {
             Log.I("RequestUserPermission", ("Permission", permission));
         }
-
+        public override void WeChatPay(string appId, string partnerId, string prepayId, string nonceStr, string timeStamp, string package, string sign)
+        {
+            Log.I("WeChatPay Editor");
+        }
+        public override void AliPay(string payOrder, string scheme)
+        {
+            Log.I("AliPay Android");
+        }
         public override string GetDataPath(string folder)
         {
             return $"{Application.persistentDataPath}/{folder}";

@@ -8,8 +8,4 @@ public partial class AssetPath
     public const string AskView = "Assets/Bundles/Builtin/Prefabs/UI/Views/Ask/AskView.prefab";
     public const string LoadingView = "Assets/Bundles/Builtin/Prefabs/UI/Views/Loading/LoadingView.prefab";
     public const string UpdateView = "Assets/Bundles/Builtin/Prefabs/UI/Views/Update/UpdateView.prefab";
-    public const string BackgroundView = "Assets/Bundles/Hotfix/Prefabs/Models/Views/Background/BackgroundView.prefab";
-    public const string Render3D2UIView = "Assets/Bundles/Hotfix/Prefabs/Models/Views/Render3D2UI/Render3D2UIView.prefab";
-    public const string Browser = "Assets/Bundles/Hotfix/Prefabs/UI/Items/Web/Browser.prefab";
-    public const string WebView = "Assets/Bundles/Hotfix/Prefabs/UI/Views/Web/WebView.prefab";
 }

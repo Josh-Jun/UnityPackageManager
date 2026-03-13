@@ -153,10 +153,6 @@ namespace App.Editor.Tools
             "AskView.prefab",
             "LoadingView.prefab",
             "UpdateView.prefab",
-            "BackgroundView.prefab",
-            "Render3D2UIView.prefab",
-            "Browser.prefab",
-            "WebView.prefab",
         };
         private static List<FileInfo> GetFiles(string folder)
         {

@@ -112,7 +112,7 @@ namespace App.Core.Master
             var assetPackage = AssetPackage.HotfixPackage;
             if (location.Split('/').Length >= 3)
             {
-                assetPackage = (AssetPackage)System.Enum.Parse(typeof(AssetPackage), $"{location.Split('/')[2]}Package");
+                assetPackage = $"{location.Split('/')[2]}Package";
             }
             else
             {
@@ -129,7 +129,7 @@ namespace App.Core.Master
             var assetPackage = AssetPackage.HotfixPackage;
             if (location.Split('/').Length >= 3)
             {
-                assetPackage = (AssetPackage)System.Enum.Parse(typeof(AssetPackage), $"{location.Split('/')[2]}Package");
+                assetPackage = $"{location.Split('/')[2]}Package";
             }
             else
             {

@@ -167,6 +167,32 @@ namespace App.Editor.Tools
         
         #endregion
         
+        #region 生成资源包枚举类型 Win(Ctrl+Shift+E) Mac(Cmd+Shift+E)
+
+        private static readonly string[] defaultPackages =
+        {
+            "BuiltinPackage",
+            "HotfixPackage",
+        };
+        
+        [MenuItem("App/Editor/UpdateAssetPackage %#E", false, EditorHelper.MENU_LEVEL)]
+        public static void UpdateAssetPackage()
+        {
+            sb.Length = 0;
+            var config = AssetDatabase.LoadAssetAtPath<AssetBundleCollectorSetting>(EditorHelper.watchers[0]);
+            sb.AppendLine("public partial class AssetPackage");
+            sb.AppendLine("{");
+            foreach (var package in config.Packages.Where(package => !defaultPackages.Contains(package.PackageName)))
+            {
+                sb.AppendLine($"    public const string {package.PackageName} = \"{package.PackageName}\";");
+            }
+            sb.AppendLine("}");
+            File.WriteAllText($"{target_path}/AssetPackage.cs", sb.ToString());
+            AssetDatabase.Refresh();
+        }
+
+        #endregion
+        
         #region 打开默认路径
         
         [MenuItem("Assets/Open Folder/DataPath", false, 0)]

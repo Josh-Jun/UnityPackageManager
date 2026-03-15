@@ -1,5 +1,5 @@
-public enum AssetPackage
+public partial class AssetPackage
 {
-    BuiltinPackage,
-    HotfixPackage,
+    public const string BuiltinPackage = "BuiltinPackage";
+    public const string HotfixPackage = "HotfixPackage";
 }

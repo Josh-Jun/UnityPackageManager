@@ -24,7 +24,12 @@ namespace App.Editor.Helper
         public const int MENU_LEVEL = 1;
 
         public static string BaseEditorPath => "Packages/com.lvlvlv.app/Editor";
-
+        
+        public static readonly string[] watchers = new[]
+        {
+            "Assets/Settings/AssetBundleCollectorSetting.asset"
+        };
+        
         public static string Browse(bool isFullPath = false)
         {
             var newPath = EditorUtility.OpenFolderPanel("Browse Folder", Application.dataPath, string.Empty);

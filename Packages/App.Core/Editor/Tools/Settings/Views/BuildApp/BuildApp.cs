@@ -321,7 +321,7 @@ namespace App.Editor.View
             }
         }
 
-        private static ScriptableBuildParameters YooAssetBuild(BuildTarget buildTarget, AssetPackage package, string version, EBuildinFileCopyOption copyOption)
+        private static ScriptableBuildParameters YooAssetBuild(BuildTarget buildTarget, string package, string version, EBuildinFileCopyOption copyOption)
         {
             Debug.Log($"开始构建 : {buildTarget}");
 

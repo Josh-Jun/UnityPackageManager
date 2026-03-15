@@ -258,6 +258,12 @@ namespace App.Editor.Tools
             },
             new ToolbarButtonItem
             {
+                image = AssetDatabase.LoadAssetAtPath<Texture>($"{EditorHelper.BaseEditorPath}/Tools/Images/asset_package_refresh.png"),
+                tooltip = "Update AssetPackage",
+                eventHandler = MenuToolsEditor.UpdateAssetPackage,
+            },
+            new ToolbarButtonItem
+            {
                 image = AssetDatabase.LoadAssetAtPath<Texture>($"{EditorHelper.BaseEditorPath}/Tools/Images/csharp.png"),
                 tooltip = "Protobuf2CS",
                 eventHandler = MenuToolsEditor.Protobuf2CS,

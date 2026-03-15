@@ -19,7 +19,7 @@ public static class Assets
     private const int DownloadingMaxNum = 10;
     private const int FailedTryAgain = 3;
 
-    public static async UniTask<ResourceDownloaderOperation> UpdatePackage(AssetPackage assetPackage)
+    public static async UniTask<ResourceDownloaderOperation> UpdatePackage(string assetPackage)
     {
         var package = await CreatePackageAsync(assetPackage, false);
         // 请求资源清单的版本信息
@@ -46,7 +46,7 @@ public static class Assets
         return null;
     }
 
-    public static async UniTask UpdatePackage(AssetPackage assetPackage, DownloaderOperation.DownloadUpdate onDownloadProgress, bool isBuiltinPackage = false)
+    public static async UniTask UpdatePackage(string assetPackage, DownloaderOperation.DownloadUpdate onDownloadProgress, bool isBuiltinPackage = false)
     {
         var package = await CreatePackageAsync(assetPackage, isBuiltinPackage);
         // 请求资源清单的版本信息
@@ -92,7 +92,7 @@ public static class Assets
         }
     }
 
-    public static async UniTask<ResourcePackage> CreatePackageAsync(AssetPackage assetPackage, bool isBuiltin = false)
+    public static async UniTask<ResourcePackage> CreatePackageAsync(string assetPackage, bool isBuiltin = false)
     {
         var package = YooAssets.CreatePackage($"{assetPackage}");
         if (isBuiltin)
@@ -183,7 +183,7 @@ public static class Assets
 
     private static string CdnServerAddress => $"{Global.CdnServer}/App/{Application.identifier}/{Global.PlatformName}/v{Application.version}/AssetBundles";
     
-    public static async UniTask ClearPackageAllCacheBundleFiles(AssetPackage assetPackage = AssetPackage.BuiltinPackage)
+    public static async UniTask ClearPackageAllCacheBundleFiles(string assetPackage = AssetPackage.BuiltinPackage)
     {
         var package = YooAssets.GetPackage($"{assetPackage}");
         var operation = package.ClearCacheFilesAsync(EFileClearMode.ClearAllBundleFiles);
@@ -200,7 +200,7 @@ public static class Assets
             Debug.LogError(operation.Error);
         }
     }
-    public static async UniTask ClearPackageUnusedCacheBundleFiles(AssetPackage assetPackage = AssetPackage.BuiltinPackage)
+    public static async UniTask ClearPackageUnusedCacheBundleFiles(string assetPackage = AssetPackage.BuiltinPackage)
     {
         var package = YooAssets.GetPackage($"{assetPackage}");
         var operation = package.ClearCacheFilesAsync(EFileClearMode.ClearUnusedBundleFiles);
@@ -217,7 +217,7 @@ public static class Assets
             Debug.LogError(operation.Error);
         }
     }
-    public static async UniTask ClearPackageCacheBundleFilesByTags(string[] tags, AssetPackage assetPackage = AssetPackage.BuiltinPackage)
+    public static async UniTask ClearPackageCacheBundleFilesByTags(string[] tags, string assetPackage = AssetPackage.BuiltinPackage)
     {
         var package = YooAssets.GetPackage($"{assetPackage}");
         var operation = package.ClearCacheFilesAsync(EFileClearMode.ClearBundleFilesByTags, tags);
@@ -236,7 +236,7 @@ public static class Assets
     }
 
     public static SceneHandle LoadSceneSync(string location,
-        AssetPackage assetPackage = AssetPackage.BuiltinPackage,
+        string assetPackage = AssetPackage.BuiltinPackage,
         LoadSceneMode loadSceneMode = LoadSceneMode.Single)
     {
         var package = YooAssets.GetPackage($"{assetPackage}");
@@ -245,7 +245,7 @@ public static class Assets
     }
 
     public static SceneHandle LoadSceneAsync(string location,
-        AssetPackage assetPackage = AssetPackage.BuiltinPackage,
+        string assetPackage = AssetPackage.BuiltinPackage,
         LoadSceneMode loadSceneMode = LoadSceneMode.Single,
         bool suspendLoad = false)
     {
@@ -255,25 +255,25 @@ public static class Assets
         return handle;
     }
 
-    public static AssetHandle LoadAssetSync(string location, AssetPackage assetPackage = AssetPackage.BuiltinPackage)
+    public static AssetHandle LoadAssetSync(string location, string assetPackage = AssetPackage.BuiltinPackage)
     {
         var package = YooAssets.GetPackage($"{assetPackage}");
         var handle = package.LoadAssetSync(location);
         return handle;
     }
-    public static async UniTask<AssetHandle> LoadAssetAsync(string location, AssetPackage assetPackage = AssetPackage.BuiltinPackage)
+    public static async UniTask<AssetHandle> LoadAssetAsync(string location, string assetPackage = AssetPackage.BuiltinPackage)
     {
         var package = YooAssets.GetPackage($"{assetPackage}");
         var handle = package.LoadAssetSync(location);
         await handle.Task;
         return handle;
     }
-    public static T LoadAssetSync<T>(string location, AssetPackage assetPackage = AssetPackage.BuiltinPackage) where T : UnityEngine.Object
+    public static T LoadAssetSync<T>(string location, string assetPackage = AssetPackage.BuiltinPackage) where T : UnityEngine.Object
     {
         var package = YooAssets.GetPackage($"{assetPackage}");
         return package.LoadAssetSync<T>(location).AssetObject as T;
     }
-    public static async UniTask<T> LoadAssetAsync<T>(string location, AssetPackage assetPackage = AssetPackage.BuiltinPackage) where T : UnityEngine.Object
+    public static async UniTask<T> LoadAssetAsync<T>(string location, string assetPackage = AssetPackage.BuiltinPackage) where T : UnityEngine.Object
     {
         var package = YooAssets.GetPackage($"{assetPackage}");
         var handle = package.LoadAssetAsync<T>(location);
@@ -283,7 +283,7 @@ public static class Assets
     
     // 卸载所有引用计数为零的资源包。
     // 可以在切换场景之后调用资源释放方法或者写定时器间隔时间去释放。
-    public static async UniTask UnloadUnusedAssets(AssetPackage assetPackage = AssetPackage.BuiltinPackage)
+    public static async UniTask UnloadUnusedAssets(string assetPackage = AssetPackage.BuiltinPackage)
     {
         var package = YooAssets.GetPackage($"{assetPackage}");
         var operation = package.UnloadUnusedAssetsAsync();
@@ -292,7 +292,7 @@ public static class Assets
 
     // 强制卸载所有资源包，该方法请在合适的时机调用。
     // 注意：Package在销毁的时候也会自动调用该方法。
-    public static async UniTask ForceUnloadAllAssets(AssetPackage assetPackage = AssetPackage.BuiltinPackage)
+    public static async UniTask ForceUnloadAllAssets(string assetPackage = AssetPackage.BuiltinPackage)
     {
         var package = YooAssets.GetPackage($"{assetPackage}");
         var operation = package.UnloadAllAssetsAsync();
@@ -301,7 +301,7 @@ public static class Assets
 
     // 尝试卸载指定的资源对象
     // 注意：如果该资源还在被使用，该方法会无效。
-    public static void TryUnloadUnusedAsset(string location, AssetPackage assetPackage = AssetPackage.BuiltinPackage)
+    public static void TryUnloadUnusedAsset(string location, string assetPackage = AssetPackage.BuiltinPackage)
     {
         var package = YooAssets.GetPackage($"{assetPackage}");
         package.TryUnloadUnusedAsset(location);

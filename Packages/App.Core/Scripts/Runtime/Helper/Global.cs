@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Reflection;
 using App.Runtime.CloudCtrl;
@@ -9,19 +10,14 @@ public static partial class Global
 {
     public static AppConfig AppConfig;
 
-    public static string HttpServer => DevelopmentEnvironments[AppConfig.DevelopmentMold].HttpServer;
-    public static string SocketServer => DevelopmentEnvironments[AppConfig.DevelopmentMold].SocketServer;
-    public static string CdnServer => DevelopmentEnvironments[AppConfig.DevelopmentMold].CdnServer;
-    public static int SocketPort => DevelopmentEnvironments[AppConfig.DevelopmentMold].SocketPort;
-    
-    public static List<string> AOTMetaAssemblyNames { get; } = new () { "mscorlib.dll", "System.dll", "System.Core.dll", "UnityEngine.CoreModule.dll", };
+    public static List<string> AOTMetaAssemblyNames { get; } = new() { "mscorlib.dll", "System.dll", "System.Core.dll", "UnityEngine.CoreModule.dll", };
 
-    public static List<string> HotfixAssemblyNames { get; } = new () { "App.Core", "App.Module", };
+    public static List<string> HotfixAssemblyNames { get; } = new() { "App.Core", "App.Module", };
 
     public static Dictionary<string, Assembly> AssemblyPairs { get; } = new();
-    
+
     public static CloudCtrl CloudCtrl = new();
-    
+
     public static string PlatformName
     {
         get
@@ -53,55 +49,57 @@ public static partial class Global
         }
     }
 
-    private static readonly Dictionary<DevelopmentMold, DevelopmentEnvironment> DevelopmentEnvironments = new ()
+    private const string ENVIRONMENT_CONFIG_NAME = "EnvironmentConfig";
+    private const string ENVIRONMENT_CONFIG_PATH = "Assets/Resources/EnvironmentConfig.asset";
+
+    public static string HttpServer => DevelopmentEnvironments[AppConfig.DevelopmentMold].HttpServer;
+    public static string SocketServer => DevelopmentEnvironments[AppConfig.DevelopmentMold].SocketServer;
+    public static string CdnServer => DevelopmentEnvironments[AppConfig.DevelopmentMold].CdnServer;
+    public static int SocketPort => DevelopmentEnvironments[AppConfig.DevelopmentMold].SocketPort;
+
+    private static EnvironmentConfig EnvironmentConfig
+    {
+        get
+        {
+            var config = Resources.Load<EnvironmentConfig>(ENVIRONMENT_CONFIG_NAME);
+            if (config != null) return config;
+#if UNITY_EDITOR
+            config = ScriptableObject.CreateInstance<EnvironmentConfig>();
+            var directoryName = System.IO.Path.GetDirectoryName(ENVIRONMENT_CONFIG_PATH);
+            if (string.IsNullOrEmpty(directoryName))
+            {
+                Debug.LogWarning("Environment config path is empty");
+                return config;
+            }
+            if(!System.IO.Directory.Exists(directoryName))
+            {
+                System.IO.Directory.CreateDirectory(directoryName);
+            }
+            UnityEditor.AssetDatabase.CreateAsset(config, ENVIRONMENT_CONFIG_PATH);
+            UnityEditor.AssetDatabase.SaveAssets();
+#endif
+            Debug.Log(config.Release.HttpServer);
+            return config;
+        }
+    }
+    
+    private static readonly Dictionary<DevelopmentMold, DevelopmentEnvironment> DevelopmentEnvironments = new()
     {
         {
             DevelopmentMold.Test,
-            new DevelopmentEnvironment()
-            {
-                HttpServer = "",
-                SocketServer = "",
-                CdnServer = "",
-                SocketPort = 8080,
-            }
+            EnvironmentConfig.Test
         },
         {
             DevelopmentMold.Sandbox,
-            new DevelopmentEnvironment()
-            {
-                HttpServer = "",
-                SocketServer = "",
-                CdnServer = "",
-                SocketPort = 8080,
-            }
+            EnvironmentConfig.Sandbox
         },
         {
             DevelopmentMold.Release,
-            new DevelopmentEnvironment()
-            {
-                HttpServer = "",
-                SocketServer = "",
-                CdnServer = "",
-                SocketPort = 8080,
-            }
+            EnvironmentConfig.Release
         },
         {
             DevelopmentMold.Local,
-            new DevelopmentEnvironment()
-            {
-                HttpServer = "",
-                SocketServer = "",
-                CdnServer = "",
-                SocketPort = 8080,
-            }
+            EnvironmentConfig.Local
         },
     };
-}
-
-public class DevelopmentEnvironment
-{
-    public string HttpServer;
-    public string SocketServer;
-    public string CdnServer;
-    public int SocketPort;
 }

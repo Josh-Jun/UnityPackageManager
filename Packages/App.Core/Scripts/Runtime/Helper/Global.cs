@@ -78,7 +78,6 @@ public static partial class Global
             UnityEditor.AssetDatabase.CreateAsset(config, ENVIRONMENT_CONFIG_PATH);
             UnityEditor.AssetDatabase.SaveAssets();
 #endif
-            Debug.Log(config.Release.HttpServer);
             return config;
         }
     }

@@ -21,6 +21,7 @@ namespace App.Editor.Helper
     public static class EditorHelper
     {
         public const string AppConfigPath = "Assets/Resources/AppConfig.asset";
+        public const string EnvironmentConfigPath = "Assets/Resources/EnvironmentConfig.asset";
         public const int MENU_LEVEL = 1;
 
         public static string BaseEditorPath => "Packages/com.lvlvlv.app/Editor";

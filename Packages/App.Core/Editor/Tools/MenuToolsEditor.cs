@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using App.Core.Tools;
 using App.Editor.Helper;
+using App.Runtime.Helper;
 using UnityEditor;
 using UnityEditor.Callbacks;
 using UnityEngine;
@@ -29,9 +30,27 @@ namespace App.Editor.Tools
                 Debug.LogError("当前不是Android平台");
                 return;
             }
-            PlayerSettings.Android.keystorePass = "123456";
-            PlayerSettings.Android.keyaliasName = "debug";
-            PlayerSettings.Android.keyaliasPass = "123456";
+
+            var config = AssetDatabase.LoadAssetAtPath<EnvironmentConfig>(EditorHelper.EnvironmentConfigPath);
+            if (config == null)
+            {
+                config = ScriptableObject.CreateInstance<EnvironmentConfig>();
+                var directoryName = Path.GetDirectoryName(EditorHelper.EnvironmentConfigPath);
+                if (string.IsNullOrEmpty(directoryName))
+                {
+                    Debug.LogWarning("App config path is empty");
+                    return;
+                }
+                if(!Directory.Exists(directoryName))
+                {
+                    Directory.CreateDirectory(directoryName);
+                }
+                AssetDatabase.CreateAsset(config, EditorHelper.EnvironmentConfigPath);
+                AssetDatabase.SaveAssets();
+            }
+            PlayerSettings.Android.keystorePass = config.KeystorePass;
+            PlayerSettings.Android.keyaliasName = config.KeyaliasName;
+            PlayerSettings.Android.keyaliasPass = config.KeyaliasPass;
             AssetDatabase.Refresh();
         }
 

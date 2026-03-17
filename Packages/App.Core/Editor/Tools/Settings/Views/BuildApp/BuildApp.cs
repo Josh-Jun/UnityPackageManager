@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using App.Editor.Helper;
+using App.Editor.Tools;
 using App.Runtime.Helper;
 using HybridCLR.Editor;
 using HybridCLR.Editor.Commands;
@@ -184,9 +185,7 @@ namespace App.Editor.View
             
             if (EditorUserBuildSettings.activeBuildTarget == BuildTarget.Android)
             {
-                PlayerSettings.Android.keystorePass = "123456";
-                PlayerSettings.Android.keyaliasName = "debug";
-                PlayerSettings.Android.keyaliasPass = "123456";
+                MenuToolsEditor.UpdateKeystore();
                 EditorUserBuildSettings.exportAsGoogleAndroidProject = appConfig.NativeApp;
                 
 #if PICO_XR_SETTING

@@ -18,10 +18,16 @@ namespace  App.Runtime.Helper
     [Serializable]
     public class EnvironmentConfig : ScriptableObject
     {
+        [Header("Environment")]
         public DevelopmentEnvironment Test;
         public DevelopmentEnvironment Sandbox;
         public DevelopmentEnvironment Release;
         public DevelopmentEnvironment Local;
+        [Space]
+        [Header("Keystore")]
+        public string KeyaliasName;
+        public string KeystorePass;
+        public string KeyaliasPass;
     }
     
     [Serializable]

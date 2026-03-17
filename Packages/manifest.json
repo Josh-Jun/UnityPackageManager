@@ -5,6 +5,7 @@
     "com.tuyoogame.yooasset": "2.3.18",
     "com.unity.addressables": "1.22.3",
     "com.unity.assetbundlebrowser": "https://github.com/Unity-Technologies/AssetBundles-Browser.git",
+    "com.yasirkula.nativegallery": "https://github.com/yasirkula/UnityNativeGallery.git",
     "com.unity.cinemachine": "2.10.6",
     "com.unity.collab-proxy": "2.7.1",
     "com.unity.ide.rider": "3.0.36",

@@ -33,7 +33,8 @@
         "com.tuyoogame.yooasset": "2.3.18",
         "com.unity.cinemachine": "2.10.6",
         "com.unity.scriptablebuildpipeline": "1.21.25",
-        "com.unity.assetbundlebrowser": "1.7.0"
+        "com.unity.assetbundlebrowser": "1.7.0",
+        "com.yasirkula.nativegallery": "1.9.1"
       }
     },
     "com.lvlvlv.gifplayer": {
@@ -263,6 +264,13 @@
         "com.unity.modules.jsonserialize": "1.0.0"
       },
       "url": "https://packages.unity.com"
+    },
+    "com.yasirkula.nativegallery": {
+      "version": "https://github.com/yasirkula/UnityNativeGallery.git",
+      "depth": 0,
+      "source": "git",
+      "dependencies": {},
+      "hash": "be4007e357006474099af338b95e73f58b77d475"
     },
     "com.unity.modules.ai": {
       "version": "1.0.0",

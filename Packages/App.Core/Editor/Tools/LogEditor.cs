@@ -8,19 +8,21 @@ namespace App.Editor.Tools
     {
         private class LogEditorConfig
         {
+            public readonly string baseLogScriptPath;
             public readonly string logScriptPath;
             public int instanceID = 0;
 
-            public LogEditorConfig(string logScriptPath)
+            public LogEditorConfig(string baseLogScriptPath, string logScriptPath)
             {
                 this.logScriptPath = logScriptPath;
+                this.baseLogScriptPath = baseLogScriptPath;
             }
         }
 
         //Add your custom Log class here  
         private static readonly LogEditorConfig[] _logEditorConfig = new LogEditorConfig[]
         {
-            new LogEditorConfig($"Packages/com.lvlvlv.app/Scripts/Core/Tools/Log/Log.cs"),
+            new LogEditorConfig("Packages/com.lvlvlv.app",$"Scripts/Core/Tools/Log/Log.cs"),
         };
 
         [UnityEditor.Callbacks.OnOpenAssetAttribute(-1)]
@@ -36,6 +38,7 @@ namespace App.Editor.Tools
                 {
                     var fileNames = track.Split('\n');
                     var fileName = GetCurrentFullFileName(fileNames);
+                    if (string.IsNullOrEmpty(fileName)) continue;
                     var fileLine = LogFileNameToFileLine(fileName);
                     fileName = GetRealFileName(fileName);
 
@@ -83,10 +86,10 @@ namespace App.Editor.Tools
                 return;
             }
 
-            var assetLoadTmp = AssetDatabase.LoadAssetAtPath<UnityEngine.Object>(config.logScriptPath);
+            var assetLoadTmp = AssetDatabase.LoadAssetAtPath<UnityEngine.Object>($"{config.baseLogScriptPath}/{config.logScriptPath}");
             if (!assetLoadTmp)
             {
-                throw new Exception("not find asset by path=" + config.logScriptPath);
+                throw new Exception("not find asset by path=" + $"{config.baseLogScriptPath}/{config.logScriptPath}");
             }
 
             config.instanceID = assetLoadTmp.GetInstanceID();

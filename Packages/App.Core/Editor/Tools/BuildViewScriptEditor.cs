@@ -167,11 +167,11 @@ namespace App.Editor.Tools
         
         public static void BuildViewScript(GameObject gameObject)
         {
-            var view_path = Path.Combine(Application.dataPath, scriptViewPath);
-            var view_script = File.ReadAllText(view_path);
+            var view_text = AssetDatabase.LoadAssetAtPath<TextAsset>(scriptViewPath);
+            var view_script = view_text.text;
             var view_script_name = gameObject.name;
             var folder_name = gameObject.name.Replace("View", "");
-            var script_path = Path.Combine(Application.dataPath, $"Scripts/{folder_name}");
+            var script_path = Path.Combine(Application.dataPath, $"Scripts/Module/{folder_name}");
             var view_script_path = Path.Combine(script_path, $"{view_script_name}.cs");
             view_script = view_script.Replace("#VIEWMOLD#", $"{ViewAttribute.View}");
             view_script = view_script.Replace("#ACTIVE#", $"{ViewAttribute.Active}".ToLower());
@@ -184,7 +184,7 @@ namespace App.Editor.Tools
             view_script = view_script.Replace("#OPEN#", "");
             view_script = view_script.Replace("#CLOSE#", "");
             
-            var files = EditorHelper.GetFiles(Path.Combine(Application.dataPath, $"Scripts"), "cs");
+            var files = EditorHelper.GetFiles(Path.Combine(Application.dataPath, $"Scripts/Module"), "cs");
             var view = files.FirstOrDefault(f => f.Name == $"{view_script_name}.cs");
             if (view != null) view_script_path = view.FullName;
             if (view == null)
@@ -206,10 +206,10 @@ namespace App.Editor.Tools
         
         public static void BuildLogicScript(GameObject gameObject)
         {
-            var logic_path = Path.Combine(Application.dataPath, scriptLogicPath);
-            var logic_script = File.ReadAllText(logic_path);
+            var logic_text = AssetDatabase.LoadAssetAtPath<TextAsset>(scriptLogicPath);
+            var logic_script = logic_text.text;
             var folder_name = gameObject.name.Replace("View", "");
-            var script_path = Path.Combine(Application.dataPath, $"Scripts/{folder_name}");
+            var script_path = Path.Combine(Application.dataPath, $"Scripts/Module/{folder_name}");
             var logic_script_name = $"{folder_name}Logic";
             var logic_script_path = Path.Combine(script_path, $"{logic_script_name}.cs");
             
@@ -217,7 +217,7 @@ namespace App.Editor.Tools
             logic_script = logic_script.Replace("#SCRIPTNAME#", logic_script_name);
             logic_script = logic_script.Replace("#EVENT#", CreateEvent());
             
-            var files = EditorHelper.GetFiles(Path.Combine(Application.dataPath, $"Scripts"), "cs");
+            var files = EditorHelper.GetFiles(Path.Combine(Application.dataPath, $"Scripts/Module"), "cs");
             var logic = files.FirstOrDefault(f => f.Name == $"{logic_script_name}.cs");
             if (logic != null) logic_script_path = logic.FullName;
             
@@ -227,17 +227,17 @@ namespace App.Editor.Tools
 
         public static void BuildItemScript(GameObject gameObject)
         {
-            var item_path = Path.Combine(Application.dataPath, scriptItemPath);
-            var item_script = File.ReadAllText(item_path);
+            var item_text = AssetDatabase.LoadAssetAtPath<TextAsset>(scriptItemPath);
+            var item_script = item_text.text;
             var item_script_name = gameObject.name;
-            var script_path = Path.Combine(Application.dataPath, $"Scripts/Items");
+            var script_path = Path.Combine(Application.dataPath, $"Scripts/Module/Items");
             var item_script_path = Path.Combine(script_path, $"{item_script_name}.cs");
             item_script = item_script.Replace("#SCRIPTNAME#", item_script_name);
             item_script = item_script.Replace("#VARIABLE#", CreatePublicVariableContent());
             item_script = item_script.Replace("#INIT#", CreateInitContent());
             item_script = item_script.Replace("#REGISTER#", CreateRegisterContent());
             
-            var files = EditorHelper.GetFiles(Path.Combine(Application.dataPath, $"Scripts"), "cs");
+            var files = EditorHelper.GetFiles(Path.Combine(Application.dataPath, $"Scripts/Module"), "cs");
             var item = files.FirstOrDefault(f => f.Name == $"{item_script_name}.cs");
             if (item != null) item_script_path = item.FullName;
             if (item == null)

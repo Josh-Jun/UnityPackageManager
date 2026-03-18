@@ -283,7 +283,7 @@ namespace App.Editor.View
 
             stringBuilder.Append("}");
 
-            var output = $"{Application.dataPath}/Scripts/Master/Config/{mold}";
+            var output = $"{Application.dataPath}/Scripts/Core/Master/Config/{mold}";
             if (!Directory.Exists(output))
             {
                 Directory.CreateDirectory(output);

@@ -387,7 +387,7 @@ namespace App.Editor.Tools
                      from t in uiViewData.components
                      where t.isPublic
                      let name = $"{uiViewData.name}{t.type}"
-                     select $"\t\tpublic {t.type} {name};")
+                     select $"\t\tpublic {t.type} {name}  {{ get; private set; }}")
             {
                 sb.AppendLine(str);
             }

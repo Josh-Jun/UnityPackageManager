@@ -51,7 +51,8 @@ namespace UnityEngine.UI
             this._originalWidth = this.GetComponent<RectTransform>().sizeDelta.x - Mathf.Abs(ViewRect.offsetMax.x) - Mathf.Abs(ViewRect.offsetMin.x);
             this._originalHeight = this.GetComponent<RectTransform>().sizeDelta.y;
             RectTransform.SetSizeWithCurrentAnchors((RectTransform.Axis)1, LayoutUtility.GetPreferredHeight(_mRect));
-            InputField.verticalScrollbar.gameObject.SetActive(false);
+            if (InputField.verticalScrollbar)
+                InputField.verticalScrollbar.gameObject.SetActive(false);
         }
 
         private string Text => this.GetComponent<TMP_InputField>().text;

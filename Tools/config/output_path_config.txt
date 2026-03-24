@@ -1,0 +1,2 @@
+script=Assets/Scripts/Core/Master/Config
+config=Assets/Bundles/Builtin/Configs

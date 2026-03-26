@@ -259,6 +259,21 @@ namespace App.Editor.Tools
         
         #region MenuItem
         private const int MenuItemPriority = -1;
+
+        // 重命名对象名称添加前缀
+        [MenuItem("GameObject/Remove Prefix", false, MenuItemPriority)]
+        public static void RemovePrefix()
+        {
+            var name = Selection.activeGameObject.name.Remove(0, 3);
+            Selection.activeGameObject.name = $"{name}"; 
+        }
+        // 重命名对象名称添加前缀
+        [MenuItem("GameObject/Add Prefix", false, MenuItemPriority)]
+        public static void AddPrefix()
+        {
+            var name = Selection.activeGameObject.name;
+            Selection.activeGameObject.name = $"LV_{name}"; 
+        }
         // 为创建自定义对象添加一个菜单。
         // 优先级为10确保它与其他同类菜单项在一组，并传播到hierarchy 下拉菜单和hierarchy 上下文菜单。
         [MenuItem("GameObject/Build View Script", false, MenuItemPriority)]
@@ -285,16 +300,46 @@ namespace App.Editor.Tools
             BuildItemScript(Selection.activeGameObject);
         }
         
+        [MenuItem("GameObject/Remove Prefix", true)]
+        public static bool ValidateRemovePrefix()
+        {
+            return Selection.activeGameObject && 
+                   Selection.activeGameObject.name.StartsWith("LV_") &&
+                   !Selection.activeGameObject.name.EndsWith("View") &&
+                   !Selection.activeGameObject.name.EndsWith("Item") &&
+                   IsInView();
+        }
+        [MenuItem("GameObject/Add Prefix", true)]
+        public static bool ValidateAddPrefix()
+        {
+            return Selection.activeGameObject && 
+                   !Selection.activeGameObject.name.StartsWith("LV_") &&
+                   !Selection.activeGameObject.name.EndsWith("View") &&
+                   !Selection.activeGameObject.name.EndsWith("Item") &&
+                   IsInView();
+        }
         [MenuItem("GameObject/Build Item Script", true)]
         public static bool ValidateMenuItemBuildItemScript()
         {
-            return Selection.activeGameObject && Selection.activeGameObject.name.EndsWith("Item");
+            return Selection.activeGameObject && 
+                   Selection.activeGameObject.name.EndsWith("Item");
         }
         [MenuItem("GameObject/Build View&&Logic Script", true)]
         [MenuItem("GameObject/Build View Script", true)]
         public static bool ValidateMenuItemBuildScript()
         {
-            return Selection.activeGameObject && Selection.activeGameObject.name.EndsWith("View") && Selection.activeGameObject.name != "UpdateView";
+            return Selection.activeGameObject && 
+                   Selection.activeGameObject.name.EndsWith("View") && 
+                   Selection.activeGameObject.name != "UpdateView";
+        }
+
+        private static bool IsInView()
+        {
+            if (!Selection.activeGameObject) return false;
+            var transforms = Selection.activeGameObject.transform.GetComponentsInParent<RectTransform>();
+            var isInView = transforms.Any(transform => transform.name.EndsWith("View"));
+            return  isInView;
+
         }
         #endregion
         

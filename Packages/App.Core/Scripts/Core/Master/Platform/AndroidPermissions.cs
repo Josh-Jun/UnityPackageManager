@@ -28,6 +28,8 @@ namespace App.Core.Master
         public const string VIBRATE = "android.permission.VIBRATE";
         // 允许程序写入外部存储,如SD卡上读写文件
         public const string WRITE_EXTERNAL_STORAGE = "android.permission.WRITE_EXTERNAL_STORAGE";
+        // Android 13及以上使用 允许程序读取媒体图片
+        public const string READ_MEDIA_IMAGES = "android.permission.READ_MEDIA_IMAGES";
 
     }
 }

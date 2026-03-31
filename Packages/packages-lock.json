@@ -34,7 +34,8 @@
         "com.unity.cinemachine": "2.10.6",
         "com.unity.scriptablebuildpipeline": "1.21.25",
         "com.unity.assetbundlebrowser": "1.7.0",
-        "com.yasirkula.nativegallery": "1.9.1"
+        "com.yasirkula.nativegallery": "1.9.1",
+        "com.yasirkula.nativefilepicker": "1.4.1"
       }
     },
     "com.lvlvlv.gifplayer": {

@@ -30,6 +30,10 @@ namespace App.Core.Master
         public const string WRITE_EXTERNAL_STORAGE = "android.permission.WRITE_EXTERNAL_STORAGE";
         // Android 13及以上使用 允许程序读取媒体图片
         public const string READ_MEDIA_IMAGES = "android.permission.READ_MEDIA_IMAGES";
+        // Android 13及以上使用 允许程序读取媒体视频
+        public const string READ_MEDIA_VIDEO =  "android.permission.READ_MEDIA_VIDEO";
+        // Android 13及以上使用 允许程序读取媒体音频
+        public const string READ_MEDIA_AUDIO  = "android.permission.READ_MEDIA_AUDIO";
 
     }
 }

@@ -216,6 +216,7 @@ namespace App.Editor.Tools
             logic_script = logic_script.Replace("#MODULE#", folder_name);
             logic_script = logic_script.Replace("#SCRIPTNAME#", logic_script_name);
             logic_script = logic_script.Replace("#EVENT#", CreateEvent());
+            logic_script = logic_script.Replace("#LOGIC#", CreateLogicMethod());
             
             var files = EditorHelper.GetFiles(Path.Combine(Application.dataPath, $"Scripts/Module"), "cs");
             var logic = files.FirstOrDefault(f => f.Name == $"{logic_script_name}.cs");
@@ -446,8 +447,7 @@ namespace App.Editor.Tools
             var sb = new StringBuilder();
             foreach (var str in views.SelectMany(uiViewData => from t in uiViewData.components
                          let str = ""
-                         let tName = t.type
-                         let name = $"{uiViewData.name}{tName}"
+                         let name = $"{uiViewData.name}{t.type}"
                          select t.eventType switch
                          {
                              1 =>
@@ -486,6 +486,7 @@ namespace App.Editor.Tools
             return sb.ToString();
         }
 
+        private static readonly List<string> inputEventNames = new (){ "SubmitEvent", "SelectEvent", "DeselectEvent"};
         private static string CreateEvent()
         {
             var sb = new StringBuilder();
@@ -495,14 +496,48 @@ namespace App.Editor.Tools
                 {
                     if (t.eventType == 0) continue;
                     var eventType = GetEventParameterType(t.type);
-                    var tName = t.type;
-                    var name = $"{uiViewData.name}{tName}";
+                    var name = $"{uiViewData.name}{t.type}";
                     var str = string.IsNullOrEmpty(eventType) ? "" : "arg";
-                    sb.AppendLine($"\t\t\tAddEventMsg{eventType}(\"{name}Event\", ({str})=>{{ }});");
+                    sb.AppendLine($"\t\t\tAddEventMsg{eventType}(\"{name}Event\", On{name}Event);");
                     if (t.eventType != 3) continue;
-                    sb.AppendLine($"\t\t\tAddEventMsg{eventType}(\"{name}SubmitEvent\", ({str})=>{{ }});");
-                    sb.AppendLine($"\t\t\tAddEventMsg{eventType}(\"{name}SelectEvent\", ({str})=>{{ }});");
-                    sb.AppendLine($"\t\t\tAddEventMsg{eventType}(\"{name}DeselectEvent\", ({str})=>{{ }});");
+                    foreach (var inputEventName in inputEventNames)
+                    {
+                        sb.AppendLine($"\t\t\tAddEventMsg{eventType}(\"{name}{inputEventName}\", On{name}{inputEventName});");
+                    }
+                }
+            }
+
+            return sb.ToString();
+        }
+        
+        
+        private static string CreateLogicMethod()
+        {
+            var sb = new StringBuilder();
+            foreach (var uiViewData in views)
+            {
+                foreach (var t in uiViewData.components)
+                {
+                    if (t.eventType == 0) continue;
+                    var _eventType = GetEventParameterType(t.type);
+                    
+                    var eventType = string.IsNullOrEmpty(_eventType) ? "" : _eventType.Substring(1, _eventType.Length - 2);
+                    var mName = $"On{uiViewData.name}{t.type}";
+                    var str = string.IsNullOrEmpty(_eventType) ? "" : " arg";
+                    
+                    sb.AppendLine($"\t\tprivate void {mName}Event({eventType}{str})");
+                    sb.AppendLine($"\t\t{{");
+                    sb.AppendLine($"\t\t\t");
+                    sb.AppendLine($"\t\t}}");
+                    if (t.eventType != 3) continue;
+                    
+                    foreach (var inputEventName in inputEventNames)
+                    {
+                        sb.AppendLine($"\t\t\tprivate void {mName}{inputEventName}({eventType}{str})");
+                        sb.AppendLine($"\t\t{{");
+                        sb.AppendLine($"\t\t\t");
+                        sb.AppendLine($"\t\t}}");
+                    }
                 }
             }
 

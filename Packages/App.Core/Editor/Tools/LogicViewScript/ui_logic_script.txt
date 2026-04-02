@@ -48,7 +48,7 @@ namespace App.Modules
 
         #region Logic
         
-        
+#LOGIC#
         
         #endregion
 

@@ -337,7 +337,7 @@ namespace App.Editor.Tools
         private static bool IsInView()
         {
             if (!Selection.activeGameObject) return false;
-            var transforms = Selection.activeGameObject.transform.GetComponentsInParent<RectTransform>();
+            var transforms = Selection.activeGameObject.transform.GetComponentsInParent<Transform>();
             var isInView = transforms.Any(transform => transform.name.EndsWith("View"));
             return  isInView;
 

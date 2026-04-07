@@ -266,14 +266,18 @@ namespace App.Editor.Tools
         public static void RemovePrefix()
         {
             var name = Selection.activeGameObject.name.Remove(0, 3);
-            Selection.activeGameObject.name = $"{name}"; 
+            Selection.activeGameObject.name = $"{name}";
+            EditorUtility.SetDirty(Selection.activeGameObject);
+            AssetDatabase.Refresh();
         }
         // 重命名对象名称添加前缀
         [MenuItem("GameObject/Add Prefix", false, MenuItemPriority)]
         public static void AddPrefix()
         {
             var name = Selection.activeGameObject.name;
-            Selection.activeGameObject.name = $"LV_{name}"; 
+            Selection.activeGameObject.name = $"LV_{name}";
+            EditorUtility.SetDirty(Selection.activeGameObject);
+            AssetDatabase.Refresh();
         }
         // 为创建自定义对象添加一个菜单。
         // 优先级为10确保它与其他同类菜单项在一组，并传播到hierarchy 下拉菜单和hierarchy 上下文菜单。

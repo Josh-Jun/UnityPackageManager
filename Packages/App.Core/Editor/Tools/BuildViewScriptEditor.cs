@@ -342,7 +342,7 @@ namespace App.Editor.Tools
         {
             if (!Selection.activeGameObject) return false;
             var transforms = Selection.activeGameObject.transform.GetComponentsInParent<Transform>();
-            var isInView = transforms.Any(transform => transform.name.EndsWith("View"));
+            var isInView = transforms.Any(transform => transform.name.EndsWith("View") || transform.name.EndsWith("Item"));
             return  isInView;
 
         }

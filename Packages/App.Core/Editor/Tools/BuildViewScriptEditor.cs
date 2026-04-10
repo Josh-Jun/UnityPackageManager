@@ -236,7 +236,8 @@ namespace App.Editor.Tools
             item_script = item_script.Replace("#SCRIPTNAME#", item_script_name);
             item_script = item_script.Replace("#VARIABLE#", CreatePublicVariableContent());
             item_script = item_script.Replace("#INIT#", CreateInitContent());
-            item_script = item_script.Replace("#REGISTER#", CreateRegisterContent());
+            item_script = item_script.Replace("#REGISTER#", CreateRegisterContent(false));
+            item_script = item_script.Replace("#LOGIC#", CreateLogicMethod());
             
             var files = EditorHelper.GetFiles(Path.Combine(Application.dataPath, $"Scripts/Module"), "cs");
             var item = files.FirstOrDefault(f => f.Name == $"{item_script_name}.cs");
@@ -265,18 +266,26 @@ namespace App.Editor.Tools
         [MenuItem("GameObject/Remove Prefix", false, MenuItemPriority)]
         public static void RemovePrefix()
         {
-            var name = Selection.activeGameObject.name.Remove(0, 3);
-            Selection.activeGameObject.name = $"{name}";
-            EditorUtility.SetDirty(Selection.activeGameObject);
+            foreach (var go in Selection.gameObjects)
+            {
+                if(!go.name.StartsWith("LV_")) continue;
+                var name = go.name.Remove(0, 3);
+                go.name = $"{name}";
+                EditorUtility.SetDirty(go);
+            }
             AssetDatabase.Refresh();
         }
         // 重命名对象名称添加前缀
         [MenuItem("GameObject/Add Prefix", false, MenuItemPriority)]
         public static void AddPrefix()
         {
-            var name = Selection.activeGameObject.name;
-            Selection.activeGameObject.name = $"LV_{name}";
-            EditorUtility.SetDirty(Selection.activeGameObject);
+            foreach (var go in Selection.gameObjects)
+            {
+                if(go.name.StartsWith("LV_")) continue;
+                var name = go.name;
+                go.name = $"LV_{name}";
+                EditorUtility.SetDirty(go);
+            }
             AssetDatabase.Refresh();
         }
         // 为创建自定义对象添加一个菜单。
@@ -446,32 +455,60 @@ namespace App.Editor.Tools
         }
 
 
-        private static string CreateRegisterContent()
+        private static string CreateRegisterContent(bool isView = true)
         {
             var sb = new StringBuilder();
-            foreach (var str in views.SelectMany(uiViewData => from t in uiViewData.components
-                         let str = ""
-                         let name = $"{uiViewData.name}{t.type}"
-                         select t.eventType switch
-                         {
-                             1 =>
-                                 $"\t\t\t{name}.onClick.AddListener(() => {{ SendEventMsg(\"{name}Event\"); }});",
-                             2 =>
-                                 $"\t\t\t{name}.onValueChanged.AddListener((arg) => {{ SendEventMsg(\"{name}Event\", arg); }});",
-                             3 =>
-                                 $"\t\t\t{name}.onValueChanged.AddListener((arg) => {{ SendEventMsg(\"{name}Event\", arg); }});\n" +
-                                 $"\t\t\t{name}.onSubmit.AddListener((arg) => {{ SendEventMsg(\"{name}SubmitEvent\", arg); }});\n" +
-                                 $"\t\t\t{name}.onSelect.AddListener((arg) => {{ SendEventMsg(\"{name}SelectEvent\", arg); }});\n" +
-                                 $"\t\t\t{name}.onDeselect.AddListener((arg) => {{ SendEventMsg(\"{name}DeselectEvent\", arg); }});",
-                             _ => str
-                         }
-                         into str
-                         where !string.IsNullOrEmpty(str)
-                         select str))
+            if (isView)
             {
-                sb.AppendLine(str);
+                foreach (var str in views.SelectMany(uiViewData => from t in uiViewData.components
+                             let str = ""
+                             let name = $"{uiViewData.name}{t.type}"
+                             select t.eventType switch
+                             {
+                                 1 =>
+                                     $"\t\t\t{name}.onClick.AddListener(() => {{ SendEventMsg(\"{name}Event\"); }});",
+                                 2 =>
+                                     $"\t\t\t{name}.onValueChanged.AddListener((arg) => {{ SendEventMsg(\"{name}Event\", arg); }});",
+                                 3 =>
+                                     $"\t\t\t{name}.onValueChanged.AddListener((arg) => {{ SendEventMsg(\"{name}Event\", arg); }});\n" +
+                                     $"\t\t\t{name}.onSubmit.AddListener((arg) => {{ SendEventMsg(\"{name}SubmitEvent\", arg); }});\n" +
+                                     $"\t\t\t{name}.onSelect.AddListener((arg) => {{ SendEventMsg(\"{name}SelectEvent\", arg); }});\n" +
+                                     $"\t\t\t{name}.onDeselect.AddListener((arg) => {{ SendEventMsg(\"{name}DeselectEvent\", arg); }});",
+                                 _ => str
+                             }
+                             into str
+                             where !string.IsNullOrEmpty(str)
+                             select str))
+                {
+                    sb.AppendLine(str);
+                }
             }
-
+            else
+            {
+                foreach (var str in views.SelectMany(uiViewData => from t in uiViewData.components
+                             let str = ""
+                             let name = $"{uiViewData.name}{t.type}"
+                             let mName = $"On{uiViewData.name}{t.type}"
+                             select t.eventType switch
+                             {
+                                 1 =>
+                                     $"\t\t\t{name}.onClick.AddListener({mName}Event);",
+                                 2 =>
+                                     $"\t\t\t{name}.onValueChanged.AddListener({mName}Event);",
+                                 3 =>
+                                     $"\t\t\t{name}.onValueChanged.AddListener({mName}Event);\n" +
+                                     $"\t\t\t{name}.onSubmit.AddListener({mName}Event);\n" +
+                                     $"\t\t\t{name}.onSelect.AddListener({mName}Event);\n" +
+                                     $"\t\t\t{name}.onDeselect.AddListener({mName}Event);",
+                                 _ => str
+                             }
+                             into str
+                             where !string.IsNullOrEmpty(str)
+                             select str))
+                {
+                    sb.AppendLine(str);
+                }
+            }
             return sb.ToString();
         }
 

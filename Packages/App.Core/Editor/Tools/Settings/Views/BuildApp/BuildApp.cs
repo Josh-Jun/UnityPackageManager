@@ -233,16 +233,16 @@ namespace App.Editor.View
             var package = PlayerSettings.applicationIdentifier.ToLower();
             var channel = appConfig.ChannelPackage.ToString().ToLower();
             var version = PlayerSettings.bundleVersion;
-            var develop =  appConfig.DevelopmentMold.ToString().ToLower();
+            var develop =  appConfig.DevelopmentMold == DevelopmentMold.Release ? "Release" : "Debug";
             var date = $"{DateTime.Now.Year}{DateTime.Now.Month:00}{DateTime.Now.Day:00}";
             var suffix = appConfig.NativeApp ? "" : ".apk";
 
             var name = EditorUserBuildSettings.activeBuildTarget switch
             {
-                BuildTarget.Android => $"{package}_{channel}_v{version}_{develop}_{date}{suffix}",
-                BuildTarget.iOS => $"{date}/{package}_{channel}_v{version}_{develop}",
-                BuildTarget.StandaloneWindows64 => $"{date}/{package}_{channel}_v{version}_{develop}/{Application.productName}.exe",
-                BuildTarget.StandaloneOSX => $"{date}/{package}_{channel}_v{version}_{develop}/{Application.productName}.app",
+                BuildTarget.Android => $"{date}/{develop}/{version}/{package}-{channel}{suffix}",
+                BuildTarget.iOS => $"{date}/{develop}/{version}/Unity-XCode-Project",
+                BuildTarget.StandaloneWindows64 => $"{date}/{develop}/{version}/{Application.productName}.exe",
+                BuildTarget.StandaloneOSX => $"{date}/{develop}/{version}/{Application.productName}.app",
                 _ => $""
             };
 

@@ -26,5 +26,11 @@ namespace App.Modules
             base.RegisterEvent();
 #REGISTER#
         }
+        
+#LOGIC#
+        protected override void RefreshItem(ItemDataBase data)
+        {
+            base.RefreshItem(data);
+        }
     }
 }

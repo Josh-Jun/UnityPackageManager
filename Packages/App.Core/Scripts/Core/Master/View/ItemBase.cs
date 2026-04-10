@@ -12,8 +12,15 @@ using App.Core.Tools;
 
 namespace App.Core.Master
 {
+    [Serializable]
+    public class ItemDataBase
+    {
+        
+    }
     public class ItemBase : EventBaseMono
     {
+        protected ItemDataBase ItemData;
+        
         [Obsolete("此方法已弃用，请使用InitItem方法", true)]
         protected virtual void Awake()
         {
@@ -31,6 +38,10 @@ namespace App.Core.Master
         /// <summary>注册消息事件,默认删除此事件</summary>
         protected virtual void RegisterEvent()
         {
+        }
+        protected virtual void RefreshItem(ItemDataBase data)
+        {
+            ItemData = data;
         }
     }
 }

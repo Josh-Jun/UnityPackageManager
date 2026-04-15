@@ -44,15 +44,14 @@ namespace App.Core.Master
         /// <summary>设置RenderTexture</summary>
         private void SetRenderTexture(int width, int height, int depth = 24)
         {
-            VideoPlayer.renderMode = VideoRenderMode.RenderTexture;
-            VideoPlayer.targetTexture = movie;
             if (width == 0 || height == 0)
             {
                 width = Screen.width;
                 height = Screen.height;
             }
-
             movie = new RenderTexture(width, height, depth);
+            VideoPlayer.renderMode = VideoRenderMode.RenderTexture;
+            VideoPlayer.targetTexture = movie;
         }
 
         private long frameIndex = 0;
@@ -87,22 +86,18 @@ namespace App.Core.Master
 
         private void OnFrameReadyEvent(VideoPlayer source, long frameIdx)
         {
-            if (frameIdx == frameIndex)
-            {
-                var renderTexture = source.texture as RenderTexture;
-                if (renderTexture != null)
-                {
-                    var texture = new Texture2D(renderTexture.width, renderTexture.height);
-                    RenderTexture.active = renderTexture;
-                    texture.ReadPixels(new Rect(0, 0, renderTexture.width, renderTexture.height), 0, 0);
-                    texture.Apply();
-                    RenderTexture.active = null;
-                    VideoPlayer.frameReady -= OnFrameReadyEvent;
-                    VideoPlayer.sendFrameReadyEvents = false;
-                    VideoPlayer.Stop();
-                    callback?.Invoke(texture);
-                }
-            }
+            if (frameIdx != frameIndex) return;
+            var renderTexture = source.texture as RenderTexture;
+            if (renderTexture == null) return;
+            var texture = new Texture2D(renderTexture.width, renderTexture.height);
+            RenderTexture.active = renderTexture;
+            texture.ReadPixels(new Rect(0, 0, renderTexture.width, renderTexture.height), 0, 0);
+            texture.Apply();
+            RenderTexture.active = null;
+            VideoPlayer.frameReady -= OnFrameReadyEvent;
+            VideoPlayer.sendFrameReadyEvents = false;
+            VideoPlayer.Stop();
+            callback?.Invoke(texture);
         }
     }
 }

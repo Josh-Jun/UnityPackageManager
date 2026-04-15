@@ -13,16 +13,14 @@ namespace App.Core.Tools
             {
                 lock (SingletonLock)
                 {
+                    if (_Instance != null) return _Instance;
+                    var go = GameObject.Find(GoName) ?? new GameObject(GoName);
+                    _Instance = go.GetComponent<T>();
                     if (_Instance == null)
                     {
-                        var go = GameObject.Find(GoName) ?? new GameObject(GoName);
-                        _Instance = go.GetComponent<T>();
-                        if (_Instance == null)
-                        {
-                            _Instance = go.AddComponent<T>();
-                        }
-                        _Instance.OnSingletonMonoInit();
+                        _Instance = go.AddComponent<T>();
                     }
+                    _Instance.OnSingletonMonoInit();
                     return _Instance;
                 }
             }

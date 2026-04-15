@@ -30,6 +30,7 @@ namespace App.Editor.View
         private int AppFrameRate = 30;
         private ChannelPackage ChannelPackage = ChannelPackage.Default;
         private bool NativeApp = false;
+        private bool IsFullBuiltinPackage = false;
         private string CloudCtrlCode = string.Empty;
         private string outputPath;
 
@@ -41,6 +42,7 @@ namespace App.Editor.View
             var asset_play_mode = root.Q<EnumField>("AssetPlayMode");
             var app_frame_rate = root.Q<TextField>("AppFrameRate");
             var channel_package = root.Q<EnumField>("ChannelPackage");
+            var full_builtin_package = root.Q<Toggle>("FullBuiltinPackage");
             var export_project = root.Q<Toggle>("ExportProject");
             var cloud_ctrl_code = root.Q<TextField>("CloudCtrlCode");
             var output_path = root.Q<TextField>("BuildAppOutputPath");
@@ -50,6 +52,7 @@ namespace App.Editor.View
             asset_play_mode.Init(AssetPlayMode);
             app_frame_rate.value = AppFrameRate.ToString();
             channel_package.Init(ChannelPackage);
+            full_builtin_package.value = IsFullBuiltinPackage;
             export_project.value = NativeApp;
             cloud_ctrl_code.value = CloudCtrlCode;
             output_path.value = outputPath;
@@ -61,7 +64,6 @@ namespace App.Editor.View
             export_project.style.display = 
                 EditorUserBuildSettings.activeBuildTarget == BuildTarget.iOS || 
                 EditorUserBuildSettings.activeBuildTarget == BuildTarget.Android ? DisplayStyle.Flex : DisplayStyle.None;
-            
             
             enable_log.RegisterCallback<ChangeEvent<bool>>((evt) => { EnableLog = evt.newValue; });
             
@@ -85,6 +87,7 @@ namespace App.Editor.View
                 ChannelPackage = mold;
             });
             
+            full_builtin_package.RegisterCallback<ChangeEvent<bool>>((evt) => { IsFullBuiltinPackage = evt.newValue; });
             export_project.RegisterCallback<ChangeEvent<bool>>((evt) => { NativeApp = evt.newValue; });
             
             cloud_ctrl_code.RegisterCallback<ChangeEvent<string>>((evt) => { CloudCtrlCode = evt.newValue; });
@@ -144,6 +147,7 @@ namespace App.Editor.View
                 ChannelPackage = AppConfig.ChannelPackage;
                 NativeApp = AppConfig.NativeApp;
                 CloudCtrlCode = AppConfig.CloudCtrlCode;
+                IsFullBuiltinPackage = AppConfig.IsFullBuiltinPackage;
             }
             else
             {
@@ -172,6 +176,7 @@ namespace App.Editor.View
             AppConfig.ChannelPackage = ChannelPackage;
             AppConfig.NativeApp = NativeApp;
             AppConfig.CloudCtrlCode = CloudCtrlCode;
+            AppConfig.IsFullBuiltinPackage = IsFullBuiltinPackage;
 
             EditorUtility.SetDirty(AppConfig);
         }

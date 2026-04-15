@@ -3,6 +3,7 @@
         <ui:Toggle label="Enable Log" name="EnableLog" value="false" />
         <uie:EnumField label="Development Mold" name="DevelopmentMold" type="App.Runtime.Helper.DevelopmentMold, App.Runtime" value="Sandbox" />
         <uie:EnumField label="Asset Play Mode" name="AssetPlayMode" type="YooAsset.EPlayMode, YooAsset" />
+        <ui:Toggle label="Full Builtin Package" name="FullBuiltinPackage" focusable="true" style="visibility: visible; overflow: hidden; display: flex;" />
         <ui:TextField picking-mode="Ignore" label="App FrameRate" name="AppFrameRate" />
         <uie:EnumField label="Channel Package" name="ChannelPackage" type="App.Runtime.Helper.ChannelPackage, App.Runtime" />
         <ui:Toggle label="Export Project" name="ExportProject" />

@@ -71,6 +71,19 @@ namespace App.Core.Master
             VideoPlayer.frameReady += OnFrameReadyEvent;
             VideoPlayer.Play();
         }
+        /// <summary>获取视频某帧图片</summary>
+        public void GetVideoFrameTexture(string url, long frameId, Action<Texture2D> action)
+        {
+            frameIndex = frameId;
+            callback = action;
+            VideoPlayer.renderMode = VideoRenderMode.APIOnly;
+            VideoPlayer.source = VideoSource.Url;
+            VideoPlayer.url = url;
+            VideoPlayer.waitForFirstFrame = true;
+            VideoPlayer.sendFrameReadyEvents = true;
+            VideoPlayer.frameReady += OnFrameReadyEvent;
+            VideoPlayer.Play();
+        }
 
         private void OnFrameReadyEvent(VideoPlayer source, long frameIdx)
         {

@@ -39,7 +39,7 @@ namespace App.Core.Master
         protected virtual void RegisterEvent()
         {
         }
-        protected virtual void RefreshItem(ItemDataBase data)
+        public virtual void RefreshItem(ItemDataBase data)
         {
             ItemData = data;
         }

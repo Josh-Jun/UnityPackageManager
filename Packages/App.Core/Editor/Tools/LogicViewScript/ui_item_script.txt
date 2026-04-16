@@ -28,7 +28,7 @@ namespace App.Modules
         }
         
 #LOGIC#
-        protected override void RefreshItem(ItemDataBase data)
+        public override void RefreshItem(ItemDataBase data)
         {
             base.RefreshItem(data);
         }

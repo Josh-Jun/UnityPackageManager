@@ -1,3 +1,4 @@
+#if DOTWEEN
 using App.Editor.Helper;
 using DG.DOTweenEditor;
 using UnityEngine;
@@ -94,3 +95,4 @@ namespace App.Editor.View
         }
     }
 }
+#endif

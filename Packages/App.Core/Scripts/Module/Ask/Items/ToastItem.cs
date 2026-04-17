@@ -13,7 +13,6 @@ using System.Collections.Generic;
 using App.Core.Master;
 using App.Core.Tools;
 using App.Modules;
-using DG.Tweening;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;

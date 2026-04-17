@@ -2,7 +2,9 @@
 using System.Collections.Generic;
 using App.Core.Helper;
 using App.Core.Tools;
+#if DOTWEEN
 using DG.Tweening;
+#endif
 using UnityEngine;
 
 namespace App.Core.Master
@@ -11,9 +13,10 @@ namespace App.Core.Master
     {
         public bool ViewActive => gameObject.activeSelf;
         public ViewMold Mold { get; set; }
+#if DOTWEEN
         private static Sequence TweenSequence;
         private static readonly List<Tweener> Tweeners = new List<Tweener>();
-
+#endif
 
         [Obsolete("此方法已弃用，请使用InitWindow方法", true)]
         protected virtual void Awake()
@@ -43,14 +46,20 @@ namespace App.Core.Master
             transform.SetAsLastSibling();
             if (gameObject.activeSelf)
             {
+#if DOTWEEN
                 Tweeners.Clear();
+#endif
                 return;
             }
+#if DOTWEEN
+                
             if (Mold is ViewMold.UI2D)
                 transform.RectTransform().anchoredPosition = CloseAnchoredPosition;
+#endif
             gameObject.SetActive(true);
             if (HasEvent($"Open{name}"))
                 SendEventMsg($"Open{name}", obj);
+#if DOTWEEN
             if (Tweeners.Count <= 0) return;
             if (Mold is not ViewMold.UI2D) return;
             TweenSequence = DOTween.Sequence();
@@ -63,6 +72,7 @@ namespace App.Core.Master
                 Tweeners.Clear();
             });
             TweenSequence.Play();
+#endif
         }
         private Vector3 CloseAnchoredPosition = Vector3.zero;
         /// <summary>关闭窗口</summary>
@@ -70,15 +80,20 @@ namespace App.Core.Master
         {
             if (!gameObject.activeSelf)
             {
+#if DOTWEEN
                 Tweeners.Clear();
+#endif
                 return;
             }
+#if DOTWEEN
             if (Tweeners.Count <= 0 || Mold is not ViewMold.UI2D)
             {
                 CloseAnchoredPosition = Vector3.zero;
+#endif
                 gameObject.SetActive(false);
                 if (HasEvent($"Close{name}"))
                     SendEventMsg($"Close{name}");
+#if DOTWEEN
             }
             else
             {
@@ -97,13 +112,15 @@ namespace App.Core.Master
                 });
                 TweenSequence.Play();
             }
+#endif
         }
         
+#if DOTWEEN
         public void AddTweener(Tweener tweener)
         {
             Tweeners.Add(tweener);
         }
-
+#endif
         public void SetAsLastSibling()
         {
             transform.SetAsLastSibling();

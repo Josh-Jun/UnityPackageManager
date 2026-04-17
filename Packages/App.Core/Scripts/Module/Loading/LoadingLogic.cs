@@ -11,9 +11,9 @@ using System;
 using App.Core.Helper;
 using App.Core.Master;
 using App.Core.Tools;
-using Cysharp.Threading.Tasks;
-using DG.Tweening;
+using UnityEngine;
 using UnityEngine.SceneManagement;
+using YooAsset;
 
 namespace App.Modules
 {
@@ -26,6 +26,7 @@ namespace App.Modules
         {
             AddEventMsg<object>("OpenLoadingView", OpenLoadingView);
             AddEventMsg("CloseLoadingView", CloseLoadingView);
+            AddEventMsg<float>("LoadingSliderSliderEvent", arg => { });
         }
 
         #region Life Cycle
@@ -55,91 +56,80 @@ namespace App.Modules
         #endregion
 
         #region Logic
-        
-        private int _timeId;
 
-        private void LoadYAScene()
+        private void LoadScene()
         {
-            if (SceneMaster.Instance.CurrentScene != null)
+            targetProgress = 0;
+            loading = true;
+            
+            switch (SceneMaster.Instance.TargetScene.Mold)
             {
-                SendEventMsg("BeforeLoadSceneEvent", SceneMaster.Instance.CurrentScene.Location);
-            }
-
-            var handle = Assets.LoadSceneAsync(SceneMaster.Instance.TargetScene.Location, AssetPackage.HotfixPackage);
-            _timeId = TimeUpdateMaster.Instance.StartTimer((time) =>
-            {
-                if (handle == null) return;
-                SetLoadingSliderValue(handle.Progress, LoadingSceneEvent);
-            });
-            return;
-
-            void LoadingSceneEvent()
-            {
-                SendEventMsg("AfterLoadSceneEvent", SceneMaster.Instance.TargetScene.Location);
-                TimeUpdateMaster.Instance.EndTimer(_timeId);
+                case LoadSceneMold.YAScene:
+                    sceneHandle = Assets.LoadSceneAsync(SceneMaster.Instance.TargetScene.Location, AssetPackage.HotfixPackage);
+                    break;
+                case LoadSceneMold.ABScene:
+                    asyncOperation = SceneManager.LoadSceneAsync(SceneMaster.Instance.TargetScene.Name);
+                    if (asyncOperation != null) asyncOperation.allowSceneActivation = false;
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
             }
         }
-
-        private async UniTask LoadABScene()
+        
+        private SceneHandle sceneHandle;
+        private AsyncOperation asyncOperation;
+        private int targetProgress;
+        private bool loading;
+        private void Update(float time)
         {
-            if (SceneMaster.Instance.CurrentScene != null)
+            if(!loading) return;
+            if (asyncOperation != null)
             {
-                SendEventMsg("BeforeLoadSceneEvent", SceneMaster.Instance.CurrentScene.Name);
-            }
-
-            var async = SceneManager.LoadSceneAsync(SceneMaster.Instance.TargetScene.Name);
-            if (async != null)
-            {
-                async.allowSceneActivation = false;
-
-                void LoadSceneCompleted()
+                if (asyncOperation.progress < 0.9f)
                 {
-                    SendEventMsg("AfterLoadSceneEvent", SceneMaster.Instance.TargetScene.Name);
+                    targetProgress = (int) (asyncOperation.progress * 100);
                 }
-
-                while (!async.isDone)
+                else
                 {
-                    await UniTask.DelayFrame(1);
-                    var progressValue = async.progress < 0.9f ? async.progress : 1.0f;
-
-                    // TODO 更新加载进度 
-                    SetLoadingSliderValue(progressValue, LoadSceneCompleted);
-                    if (progressValue >= 0.9f)
+                    ++targetProgress;
+                    if (targetProgress == 100)
                     {
-                        async.allowSceneActivation = true;
+                        asyncOperation.allowSceneActivation = true;
                     }
                 }
             }
-        }
-        private void SetLoadingSliderValue(float value, Action callback = null)
-        {
-            View.LoadingSliderSlider.DOKill();
-            var duration = value >= 1 ? 0.5f : 5f;
-            var endValue = value >= 1 ? 1f : 0.9f;
-            View.LoadingSliderSlider.DOValue(endValue, duration).SetEase(Ease.Linear).OnComplete(() => { callback?.Invoke(); });
-            if(View.ProgressTextMeshProUGUI)
+
+            if (sceneHandle != null)
             {
-                View.ProgressTextMeshProUGUI.text = $"{View.LoadingSliderSlider.value * 100:F2}%";
+                targetProgress = (int) (sceneHandle.Progress * 100);
             }
+            View.LoadingSliderSlider.value = targetProgress / 100f;
+            if(View.ProgressTextMeshProUGUI)
+                View.ProgressTextMeshProUGUI.text = $"{targetProgress}%";
+            
+            if (targetProgress < 100) return;
+            TimeUpdateMaster.Instance.EndTimer(loadingTimeTaskId);
+            SendEventMsg("AfterLoadSceneEvent", SceneMaster.Instance.TargetScene.Name);
+            asyncOperation = null;
+            sceneHandle = null;
+            loading = false;
         }
         
         #endregion
 
         #region View Logic
 
+        private int loadingTimeTaskId = -1;
         private void OpenLoadingView(object obj)
         {
-            switch (SceneMaster.Instance.TargetScene.Mold)
+            loadingTimeTaskId = TimeUpdateMaster.Instance.StartTimer(Update);
+            
+            if (SceneMaster.Instance.CurrentScene != null)
             {
-                case LoadSceneMold.YAScene:
-                    LoadYAScene();
-                    break;
-                case LoadSceneMold.ABScene:
-                    LoadABScene().Forget();
-                    break;
-                default:
-                    throw new ArgumentOutOfRangeException();
+                SendEventMsg("BeforeLoadSceneEvent", SceneMaster.Instance.CurrentScene.Name);
             }
+
+            LoadScene();
         }
 
         private void CloseLoadingView()

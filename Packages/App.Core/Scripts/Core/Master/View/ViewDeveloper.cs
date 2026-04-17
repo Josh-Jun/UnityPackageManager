@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+#if DOTWEEN
 using DG.Tweening;
 using UnityEngine;
 using App.Core.Tools;
@@ -37,3 +37,4 @@ namespace App.Core.Master
         }
     }
 }
+#endif

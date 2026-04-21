@@ -6,7 +6,7 @@ using App.Core.Tools;
 
 namespace App.Core.Master
 {
-    public class VideoMaster : SingletonMono<VideoMaster>
+    public partial class VideoMaster : SingletonMono<VideoMaster>
     {
         private RenderTexture movie;
         private VideoPlayer VideoPlayer { get; set; }

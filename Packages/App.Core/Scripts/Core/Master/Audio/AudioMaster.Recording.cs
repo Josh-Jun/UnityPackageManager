@@ -18,6 +18,7 @@ namespace App.Core.Master
         private const int targetSampleRate = 16000; // 目标采样率 (8000或16000)
         private const int bufferSizeSeconds = 1; // 音频缓冲区大小(秒)
         private bool isRecording = false; // 是否正在录制
+        private bool isMute = false;
         private int lastSamplePosition = 0;
         private float[] audioBuffer;
         private int bufferSize;
@@ -58,14 +59,12 @@ namespace App.Core.Master
 
             if (!_audioClip)
             {
-                Debug.LogError("无法启动麦克风录音");
+                Log.E("无法启动麦克风录音");
                 return;
             }
 
             // 等待麦克风初始化
-            while (Microphone.GetPosition(_deviceName) <= 0)
-            {
-            }
+            while (Microphone.GetPosition(_deviceName) <= 0) { }
 
             lastSamplePosition = 0;
             isRecording = true;
@@ -74,6 +73,7 @@ namespace App.Core.Master
 
         private void ReadAudioData(float time)
         {
+            if (isMute) return;
             if (!isRecording) return;
             if (_audioClip == null) return;
             VisualAudio();
@@ -188,6 +188,11 @@ namespace App.Core.Master
             TimeUpdateMaster.Instance.EndTimer(_timeId);
             _audioClip = null;
             isRecording = false;
+        }
+
+        public void SetMicrophoneMute(bool mute)
+        {
+            isMute = mute;
         }
 
         public bool IsRecording()

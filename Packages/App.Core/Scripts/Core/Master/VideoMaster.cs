@@ -64,7 +64,7 @@ namespace App.Core.Master
         public void PlayVideo(RawImage rawImage, string url, string playerName = null, Action cb = null, int width = 0, int height = 0)
         {
             var player = GetVideoPlayer(playerName);
-            SetRenderTexture(width, height, VideoRenderMode.RenderTexture);
+            SetRenderTexture(player, width, height, VideoRenderMode.RenderTexture);
             player.source = VideoSource.Url;
             player.url = url;
             rawImage.texture = movie;
@@ -76,7 +76,7 @@ namespace App.Core.Master
         public void PlayVideo(RawImage rawImage, VideoClip clip, string playerName = null, Action cb = null, int width = 0, int height = 0)
         {
             var player = GetVideoPlayer(playerName);
-            SetRenderTexture(width, height, VideoRenderMode.RenderTexture);
+            SetRenderTexture(player, width, height, VideoRenderMode.RenderTexture);
             player.source = VideoSource.VideoClip;
             player.clip = clip;
             rawImage.texture = movie;
@@ -88,7 +88,7 @@ namespace App.Core.Master
         public void PlayVideo(Renderer render, string url, string playerName = null, Action cb = null, int width = 0, int height = 0)
         {
             var player = GetVideoPlayer(playerName);
-            SetRenderTexture(width, height, VideoRenderMode.MaterialOverride);
+            SetRenderTexture(player, width, height, VideoRenderMode.MaterialOverride);
             player.source = VideoSource.Url;
             player.url = url;
             player.targetMaterialRenderer = render;
@@ -100,7 +100,7 @@ namespace App.Core.Master
         public void PlayVideo(Renderer render, VideoClip clip, string playerName = null, Action cb = null, int width = 0, int height = 0)
         {
             var player = GetVideoPlayer(playerName);
-            SetRenderTexture(width, height, VideoRenderMode.MaterialOverride);
+            SetRenderTexture(player, width, height, VideoRenderMode.MaterialOverride);
             player.source = VideoSource.VideoClip;
             player.clip = clip;
             player.targetMaterialRenderer = render;
@@ -112,7 +112,7 @@ namespace App.Core.Master
         public void PlayVideo(Camera targetCamera, string url, int layer, VideoAspectRatio aspectRatio, string playerName = null, Action cb = null, int width = 0, int height = 0)
         {
             var player = GetVideoPlayer(playerName);
-            SetRenderTexture(width, height, (VideoRenderMode)layer);
+            SetRenderTexture(player, width, height, (VideoRenderMode)layer);
             player.source = VideoSource.Url;
             player.url = url;
             player.targetCamera = targetCamera;
@@ -125,7 +125,7 @@ namespace App.Core.Master
         public void PlayVideo(Camera targetCamera, VideoClip clip, int layer, VideoAspectRatio aspectRatio, string playerName = null, Action cb = null, int width = 0, int height = 0)
         {
             var player = GetVideoPlayer(playerName);
-            SetRenderTexture(width, height, (VideoRenderMode)layer);
+            SetRenderTexture(player, width, height, (VideoRenderMode)layer);
             player.source = VideoSource.VideoClip;
             player.clip = clip;
             player.targetCamera = targetCamera;
@@ -135,9 +135,9 @@ namespace App.Core.Master
         }
 
         /// <summary>设置RenderTexture</summary>
-        private void SetRenderTexture(int width, int height, VideoRenderMode renderMode, int depth = 24)
+        private void SetRenderTexture(VideoPlayer player, int width, int height, VideoRenderMode renderMode, int depth = 24)
         {
-            VideoPlayer.renderMode = renderMode;
+            player.renderMode = renderMode;
             if (renderMode != VideoRenderMode.RenderTexture) return;
             if (width == 0 || height == 0)
             {
@@ -145,37 +145,39 @@ namespace App.Core.Master
                 height = Screen.height;
             }
             movie = RenderTexture.GetTemporary(width, height, depth, RenderTextureFormat.ARGB32);
-            VideoPlayer.targetTexture = movie;
+            player.targetTexture = movie;
         }
 
         private long frameIndex = 0;
         private Action<Texture2D> callback = null;
 
         /// <summary>获取视频某帧图片</summary>
-        public void GetVideoFrameTexture(VideoClip clip, long frameId, Action<Texture2D> action)
+        public void GetVideoFrameTexture(VideoClip clip, long frameId, Action<Texture2D> action, string playerName = null)
         {
+            var player = GetVideoPlayer(playerName);
             frameIndex = frameId;
             callback = action;
-            VideoPlayer.renderMode = VideoRenderMode.APIOnly;
-            VideoPlayer.source = VideoSource.VideoClip;
-            VideoPlayer.clip = clip;
-            VideoPlayer.waitForFirstFrame = true;
-            VideoPlayer.sendFrameReadyEvents = true;
-            VideoPlayer.frameReady += OnFrameReadyEvent;
-            VideoPlayer.Play();
+            player.renderMode = VideoRenderMode.APIOnly;
+            player.source = VideoSource.VideoClip;
+            player.clip = clip;
+            player.waitForFirstFrame = true;
+            player.sendFrameReadyEvents = true;
+            player.frameReady += OnFrameReadyEvent;
+            player.Play();
         }
         /// <summary>获取视频某帧图片</summary>
-        public void GetVideoFrameTexture(string url, long frameId, Action<Texture2D> action)
+        public void GetVideoFrameTexture(string url, long frameId, Action<Texture2D> action, string playerName = null)
         {
+            var player = GetVideoPlayer(playerName);
             frameIndex = frameId;
             callback = action;
-            VideoPlayer.renderMode = VideoRenderMode.APIOnly;
-            VideoPlayer.source = VideoSource.Url;
-            VideoPlayer.url = url;
-            VideoPlayer.waitForFirstFrame = true;
-            VideoPlayer.sendFrameReadyEvents = true;
-            VideoPlayer.frameReady += OnFrameReadyEvent;
-            VideoPlayer.Play();
+            player.renderMode = VideoRenderMode.APIOnly;
+            player.source = VideoSource.Url;
+            player.url = url;
+            player.waitForFirstFrame = true;
+            player.sendFrameReadyEvents = true;
+            player.frameReady += OnFrameReadyEvent;
+            player.Play();
         }
 
         private void OnFrameReadyEvent(VideoPlayer source, long frameIdx)
@@ -188,9 +190,9 @@ namespace App.Core.Master
             texture.ReadPixels(new Rect(0, 0, renderTexture.width, renderTexture.height), 0, 0);
             texture.Apply();
             RenderTexture.active = null;
-            VideoPlayer.frameReady -= OnFrameReadyEvent;
-            VideoPlayer.sendFrameReadyEvents = false;
-            VideoPlayer.Stop();
+            source.frameReady -= OnFrameReadyEvent;
+            source.sendFrameReadyEvents = false;
+            source.Stop();
             callback?.Invoke(texture);
         }
     }

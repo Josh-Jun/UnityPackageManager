@@ -180,19 +180,19 @@ namespace App.Core.Master
             player.Play();
         }
 
-        private void OnFrameReadyEvent(VideoPlayer source, long frameIdx)
+        private void OnFrameReadyEvent(VideoPlayer player, long frameIdx)
         {
             if (frameIdx != frameIndex) return;
-            var renderTexture = source.texture as RenderTexture;
+            var renderTexture = player.texture as RenderTexture;
             if (renderTexture == null) return;
             var texture = new Texture2D(renderTexture.width, renderTexture.height);
             RenderTexture.active = renderTexture;
             texture.ReadPixels(new Rect(0, 0, renderTexture.width, renderTexture.height), 0, 0);
             texture.Apply();
             RenderTexture.active = null;
-            source.frameReady -= OnFrameReadyEvent;
-            source.sendFrameReadyEvents = false;
-            source.Stop();
+            player.frameReady -= OnFrameReadyEvent;
+            player.sendFrameReadyEvents = false;
+            player.Stop();
             callback?.Invoke(texture);
         }
     }

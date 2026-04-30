@@ -27,9 +27,9 @@ namespace App.Core.Master
         {
             if (string.IsNullOrEmpty(playerName)) return;
             if (videoPlayers.ContainsKey(playerName)) return;
-            var effect = new GameObject(playerName, typeof(VideoPlayer));
-            effect.transform.SetParent(video.transform);
-            videoPlayers[playerName] = effect.GetOrAddComponent<VideoPlayer>();
+            var player = new GameObject(playerName, typeof(VideoPlayer));
+            player.transform.SetParent(video.transform);
+            videoPlayers[playerName] = player.GetOrAddComponent<VideoPlayer>();
             videoPlayers[playerName].playOnAwake = false;
             videoPlayers[playerName].sendFrameReadyEvents = true;
             videoPlayers[playerName].isLooping = loops;
@@ -37,7 +37,15 @@ namespace App.Core.Master
 
         public VideoPlayer GetVideoPlayer(string playerName = null)
         {
-            return string.IsNullOrEmpty(playerName) ? VideoPlayer : videoPlayers.GetValueOrDefault(playerName, VideoPlayer);
+            if(string.IsNullOrEmpty(playerName))
+            {
+                return VideoPlayer;
+            }
+
+            if (videoPlayers.TryGetValue(playerName, out var player)) return player;
+            CreateVideoPlayer(playerName);
+            player = videoPlayers[playerName];
+            return player;
         }
 
         public void RemoveVideoPlayer(string playerName)

@@ -48,7 +48,15 @@ namespace App.Core.Master
 
         public AudioSource GetEffectAudio(string sourceName = null)
         {
-            return string.IsNullOrEmpty(sourceName) ? defaultEffectAudio : effectAudios.GetValueOrDefault(sourceName, defaultEffectAudio);
+            if(string.IsNullOrEmpty(sourceName))
+            {
+                return defaultEffectAudio;
+            }
+
+            if (effectAudios.TryGetValue(sourceName, out var audioSource)) return audioSource;
+            CreateEffectAudio(sourceName);
+            audioSource = effectAudios[sourceName];
+            return audioSource;
         }
 
         public void RemoveEffectAudio(string sourceName)

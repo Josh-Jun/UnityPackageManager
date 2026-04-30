@@ -101,25 +101,27 @@ namespace App.Core.Master
         }
         
         /// <summary>在Camera上播放视频，URL</summary>
-        public void PlayVideo(Camera targetCamera, string url, int layer, string playerName = null, Action cb = null, int width = 0, int height = 0)
+        public void PlayVideo(Camera targetCamera, string url, int layer, VideoAspectRatio aspectRatio, string playerName = null, Action cb = null, int width = 0, int height = 0)
         {
             var player = GetVideoPlayer(playerName);
             SetRenderTexture(width, height, (VideoRenderMode)layer);
             player.source = VideoSource.Url;
             player.url = url;
             player.targetCamera = targetCamera;
+            player.aspectRatio = aspectRatio;
             player.Play();
             player.loopPointReached += _ => { cb?.Invoke(); };
         }
 
         /// <summary>在Camera上播放视频，Clip</summary>
-        public void PlayVideo(Camera targetCamera, VideoClip clip, int layer, string playerName = null, Action cb = null, int width = 0, int height = 0)
+        public void PlayVideo(Camera targetCamera, VideoClip clip, int layer, VideoAspectRatio aspectRatio, string playerName = null, Action cb = null, int width = 0, int height = 0)
         {
             var player = GetVideoPlayer(playerName);
             SetRenderTexture(width, height, (VideoRenderMode)layer);
             player.source = VideoSource.VideoClip;
             player.clip = clip;
             player.targetCamera = targetCamera;
+            player.aspectRatio = aspectRatio;
             player.Play();
             player.loopPointReached += _ => { cb?.Invoke(); };
         }

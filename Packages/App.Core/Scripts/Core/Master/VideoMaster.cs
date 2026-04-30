@@ -2,6 +2,7 @@
 using UnityEngine.Video;
 using UnityEngine.UI;
 using System;
+using System.Collections.Generic;
 using App.Core.Tools;
 
 namespace App.Core.Master
@@ -9,48 +10,131 @@ namespace App.Core.Master
     public partial class VideoMaster : SingletonMono<VideoMaster>
     {
         private RenderTexture movie;
+        private GameObject video;
         private VideoPlayer VideoPlayer { get; set; }
+        private readonly Dictionary<string, VideoPlayer> videoPlayers = new();
 
         private void Awake()
         {
-            var video = new GameObject("VideoPlayer", typeof(VideoPlayer));
+            video = new GameObject("VideoPlayer", typeof(VideoPlayer));
             video.transform.SetParent(transform);
             VideoPlayer = video.GetOrAddComponent<VideoPlayer>();
+            VideoPlayer.playOnAwake = false;
             VideoPlayer.sendFrameReadyEvents = true;
         }
 
-        /// <summary>在RawImage上播放视频，URL</summary>
-        public void PlayVideo(RawImage rawImage, string url, Action cb = null, int width = 0, int height = 0)
+        public void CreateVideoPlayer(string playerName, bool loops = false)
         {
-            SetRenderTexture(width, height);
-            VideoPlayer.source = VideoSource.Url;
-            VideoPlayer.url = url;
-            rawImage.texture = movie;
-            VideoPlayer.Play();
-            VideoPlayer.loopPointReached += (VideoPlayer vp) => { cb?.Invoke(); };
+            if (string.IsNullOrEmpty(playerName)) return;
+            if (videoPlayers.ContainsKey(playerName)) return;
+            var effect = new GameObject(playerName, typeof(VideoPlayer));
+            effect.transform.SetParent(video.transform);
+            videoPlayers[playerName] = effect.GetOrAddComponent<VideoPlayer>();
+            videoPlayers[playerName].playOnAwake = false;
+            videoPlayers[playerName].sendFrameReadyEvents = true;
+            videoPlayers[playerName].isLooping = loops;
+        }
+
+        public VideoPlayer GetVideoPlayer(string playerName = null)
+        {
+            return string.IsNullOrEmpty(playerName) ? VideoPlayer : videoPlayers.GetValueOrDefault(playerName, VideoPlayer);
+        }
+
+        public void RemoveVideoPlayer(string playerName)
+        {
+            if(!videoPlayers.TryGetValue(playerName, out var player)) return;
+            Destroy(player.gameObject);
+            videoPlayers.Remove(playerName);
+        }
+
+        public void SetVideoPlayerLoop(string playerName, bool loops)
+        {
+            GetVideoPlayer(playerName).isLooping = loops;
         }
 
         /// <summary>在RawImage上播放视频，URL</summary>
-        public void PlayVideo(RawImage rawImage, VideoClip clip, Action cb = null, int width = 0, int height = 0)
+        public void PlayVideo(RawImage rawImage, string url, string playerName = null, Action cb = null, int width = 0, int height = 0)
         {
-            SetRenderTexture(width, height);
-            VideoPlayer.source = VideoSource.VideoClip;
-            VideoPlayer.clip = clip;
+            var player = GetVideoPlayer(playerName);
+            SetRenderTexture(width, height, VideoRenderMode.RenderTexture);
+            player.source = VideoSource.Url;
+            player.url = url;
+            rawImage.texture = movie;
+            player.Play();
+            player.loopPointReached += _ => { cb?.Invoke(); };
+        }
+
+        /// <summary>在RawImage上播放视频，Clip</summary>
+        public void PlayVideo(RawImage rawImage, VideoClip clip, string playerName = null, Action cb = null, int width = 0, int height = 0)
+        {
+            var player = GetVideoPlayer(playerName);
+            SetRenderTexture(width, height, VideoRenderMode.RenderTexture);
+            player.source = VideoSource.VideoClip;
+            player.clip = clip;
             rawImage.texture = movie;
             VideoPlayer.Play();
-            VideoPlayer.loopPointReached += (VideoPlayer vp) => { cb?.Invoke(); };
+            player.loopPointReached += _ => { cb?.Invoke(); };
+        }
+        
+        /// <summary>在Renderer上播放视频，URL</summary>
+        public void PlayVideo(Renderer render, string url, string playerName = null, Action cb = null, int width = 0, int height = 0)
+        {
+            var player = GetVideoPlayer(playerName);
+            SetRenderTexture(width, height, VideoRenderMode.MaterialOverride);
+            player.source = VideoSource.Url;
+            player.url = url;
+            player.targetMaterialRenderer = render;
+            player.Play();
+            player.loopPointReached += (VideoPlayer vp) => { cb?.Invoke(); };
+        }
+
+        /// <summary>在Renderer上播放视频，Clip</summary>
+        public void PlayVideo(Renderer render, VideoClip clip, string playerName = null, Action cb = null, int width = 0, int height = 0)
+        {
+            var player = GetVideoPlayer(playerName);
+            SetRenderTexture(width, height, VideoRenderMode.MaterialOverride);
+            player.source = VideoSource.VideoClip;
+            player.clip = clip;
+            player.targetMaterialRenderer = render;
+            player.Play();
+            player.loopPointReached += _ => { cb?.Invoke(); };
+        }
+        
+        /// <summary>在Camera上播放视频，URL</summary>
+        public void PlayVideo(Camera targetCamera, string url, int layer, string playerName = null, Action cb = null, int width = 0, int height = 0)
+        {
+            var player = GetVideoPlayer(playerName);
+            SetRenderTexture(width, height, (VideoRenderMode)layer);
+            player.source = VideoSource.Url;
+            player.url = url;
+            player.targetCamera = targetCamera;
+            player.Play();
+            player.loopPointReached += _ => { cb?.Invoke(); };
+        }
+
+        /// <summary>在Camera上播放视频，Clip</summary>
+        public void PlayVideo(Camera targetCamera, VideoClip clip, int layer, string playerName = null, Action cb = null, int width = 0, int height = 0)
+        {
+            var player = GetVideoPlayer(playerName);
+            SetRenderTexture(width, height, (VideoRenderMode)layer);
+            player.source = VideoSource.VideoClip;
+            player.clip = clip;
+            player.targetCamera = targetCamera;
+            player.Play();
+            player.loopPointReached += _ => { cb?.Invoke(); };
         }
 
         /// <summary>设置RenderTexture</summary>
-        private void SetRenderTexture(int width, int height, int depth = 24)
+        private void SetRenderTexture(int width, int height, VideoRenderMode renderMode, int depth = 24)
         {
+            VideoPlayer.renderMode = renderMode;
+            if (renderMode != VideoRenderMode.RenderTexture) return;
             if (width == 0 || height == 0)
             {
                 width = Screen.width;
                 height = Screen.height;
             }
-            movie = new RenderTexture(width, height, depth);
-            VideoPlayer.renderMode = VideoRenderMode.RenderTexture;
+            movie = RenderTexture.GetTemporary(width, height, depth, RenderTextureFormat.ARGB32);
             VideoPlayer.targetTexture = movie;
         }
 

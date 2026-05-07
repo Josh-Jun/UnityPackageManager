@@ -574,7 +574,7 @@ namespace App.Editor.Tools
                     
                     foreach (var inputEventName in inputEventNames)
                     {
-                        sb.AppendLine($"\t\t\tprivate void {mName}{inputEventName}({eventType}{str})");
+                        sb.AppendLine($"\t\tprivate void {mName}{inputEventName}({eventType}{str})");
                         sb.AppendLine($"\t\t{{");
                         sb.AppendLine($"\t\t\t");
                         sb.AppendLine($"\t\t}}");

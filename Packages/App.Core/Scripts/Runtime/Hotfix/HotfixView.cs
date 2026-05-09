@@ -52,7 +52,7 @@ namespace App.Runtime.Hotfix
                 callback?.Invoke();
                 return;
             }
-            SendMessage("ShowAgreePanel", callback);
+            SendMessage("ShowAgreePanelEvent", callback);
         }
 
         public void SetDownloadProgress(DownloadUpdateData data)

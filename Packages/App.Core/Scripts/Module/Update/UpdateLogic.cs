@@ -26,7 +26,7 @@ namespace App.Modules
         private ResourceDownloaderOperation _downloader;
         public UpdateLogic()
         {
-            AddEventMsg<object>("OpenUpdateView", OpenUpdateView);
+            AddEventMsg<ViewBaseData>("OpenUpdateView", OpenUpdateView);
             AddEventMsg("CloseUpdateView", CloseUpdateView);
             AddEventMsg("UpdateNow", UpdateNow);
         }
@@ -66,7 +66,7 @@ namespace App.Modules
             });
         }
         
-        private void OpenUpdateView(object obj)
+        private void OpenUpdateView(ViewBaseData baseData)
         {
             _view.Reset();
         }

@@ -9,10 +9,16 @@ using UnityEngine;
 
 namespace App.Core.Master
 {
+    [Serializable]
+    public class ViewBaseData
+    {
+        
+    }
     public class ViewBase : EventBaseMono
     {
         public bool ViewActive => gameObject.activeSelf;
         public ViewMold Mold { get; set; }
+        public ViewBaseData ViewData { get; private set; }
 #if DOTWEEN
         private static Sequence TweenSequence;
         private static readonly List<Tweener> Tweeners = new List<Tweener>();
@@ -41,8 +47,9 @@ namespace App.Core.Master
         }
 
         /// <summary>打开窗口</summary>
-        public void OpenView(object obj = null)
+        public void OpenView(ViewBaseData data = null)
         {
+            ViewData = data;
             transform.SetAsLastSibling();
             if (gameObject.activeSelf)
             {
@@ -58,7 +65,7 @@ namespace App.Core.Master
 #endif
             gameObject.SetActive(true);
             if (HasEvent($"Open{name}"))
-                SendEventMsg($"Open{name}", obj);
+                SendEventMsg($"Open{name}", data);
 #if DOTWEEN
             if (Tweeners.Count <= 0) return;
             if (Mold is not ViewMold.UI2D) return;

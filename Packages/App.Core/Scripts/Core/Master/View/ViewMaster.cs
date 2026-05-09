@@ -12,7 +12,7 @@ namespace App.Core.Master
     public class StepData
     {
         public string ViewName;
-        public object obj;
+        public ViewBaseData Data;
     }
 
     /// <summary>红点类型</summary>
@@ -268,7 +268,7 @@ namespace App.Core.Master
             }
         }
 
-        private void AddViewStep(ViewBase view, object args)
+        private void AddViewStep(ViewBase view, ViewBaseData data)
         {
             var obj = view.GetType().GetCustomAttributes(typeof(ViewOfAttribute), false).FirstOrDefault();
             if (obj is not ViewOfAttribute attribute) return;
@@ -276,7 +276,7 @@ namespace App.Core.Master
             ViewStepStack.Push(new StepData()
             {
                 ViewName = view.GetType().FullName,
-                obj = obj
+                Data = data
             });
         }
 
@@ -445,7 +445,7 @@ namespace App.Core.Master
             return position;
         }
 
-        public void OpenView<T>(object obj = null) where T : ViewBase
+        public void OpenView<T>(ViewBaseData data = null) where T : ViewBase
         {
             var view = GetView<T>();
             if (!view)
@@ -454,11 +454,11 @@ namespace App.Core.Master
                 return;
             }
 
-            AddViewStep(view, obj);
-            view.OpenView(obj);
+            AddViewStep(view, data);
+            view.OpenView(data);
         }
 
-        public void OpenView(string scriptName, object obj = null)
+        public void OpenView(string scriptName, ViewBaseData data = null)
         {
             var view = GetView(scriptName);
             if (!view)
@@ -467,8 +467,8 @@ namespace App.Core.Master
                 return;
             }
 
-            AddViewStep(view, obj);
-            view.OpenView(obj);
+            AddViewStep(view, data);
+            view.OpenView(data);
         }
 
         public void CloseView<T>(bool isClear = false) where T : ViewBase
@@ -608,7 +608,7 @@ namespace App.Core.Master
                 return;
             }
 
-            view.OpenView(step.obj);
+            view.OpenView(step.Data);
         }
 
         public void RefreshRedDotCount(RedDotMold mold, int count)

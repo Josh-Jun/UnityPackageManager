@@ -24,7 +24,7 @@ namespace App.Modules
 
         public LoadingLogic()
         {
-            AddEventMsg<object>("OpenLoadingView", OpenLoadingView);
+            AddEventMsg<ViewBaseData>("OpenLoadingView", OpenLoadingView);
             AddEventMsg("CloseLoadingView", CloseLoadingView);
             AddEventMsg<float>("LoadingSliderSliderEvent", arg => { });
         }
@@ -120,7 +120,7 @@ namespace App.Modules
         #region View Logic
 
         private int loadingTimeTaskId = -1;
-        private void OpenLoadingView(object obj)
+        private void OpenLoadingView(ViewBaseData baseData)
         {
             loadingTimeTaskId = TimeUpdateMaster.Instance.StartTimer(Update);
             

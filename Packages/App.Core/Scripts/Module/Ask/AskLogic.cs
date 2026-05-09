@@ -21,7 +21,7 @@ namespace App.Modules
         Snackbar,
     }
     [Serializable]
-    public class AskData
+    public class AskData : ViewBaseData
     {
         // 类型
         public AskMold mold;
@@ -46,7 +46,7 @@ namespace App.Modules
 
         public AskLogic()
         {
-            AddEventMsg<object>("OpenAskView", OpenAskView);
+            AddEventMsg<ViewBaseData>("OpenAskView", OpenAskView);
             AddEventMsg("CloseAskView", CloseAskView);
         }
 
@@ -155,9 +155,9 @@ namespace App.Modules
 
         #region View Logic
 
-        private void OpenAskView(object obj)
+        private void OpenAskView(ViewBaseData baseData)
         {
-            if (obj is AskData data)
+            if (baseData is AskData data)
             {
                 OpenAskView(data);
             }

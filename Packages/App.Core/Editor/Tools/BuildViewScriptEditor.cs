@@ -75,6 +75,14 @@ namespace App.Editor.Tools
                 attribute = ViewAttribute;
                 isDisabled = false;
             }
+            else
+            {
+                ViewAttribute.SetActive(attribute.Active);
+                ViewAttribute.SetLocation(attribute.Location);
+                ViewAttribute.SetName(attribute.Name);
+                ViewAttribute.SetLayer(attribute.Layer);
+                ViewAttribute.SetViewMold(attribute.View);
+            }
 
             DrawViewActiveToggle(rect, attribute.Active, isDisabled);
             DrawViewLayer(rect, attribute.Layer, isDisabled);

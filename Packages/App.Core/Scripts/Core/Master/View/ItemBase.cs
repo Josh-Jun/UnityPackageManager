@@ -15,7 +15,7 @@ namespace App.Core.Master
     [Serializable]
     public class ItemDataBase
     {
-        
+        public int Index;
     }
     public class ItemBase : EventBaseMono
     {

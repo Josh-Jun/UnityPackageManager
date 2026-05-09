@@ -15,7 +15,7 @@ namespace App.Modules
         
         public #SCRIPTNAME#()
         {
-	        AddEventMsg<object>("Open#MODULE#View", Open#MODULE#View);
+	        AddEventMsg<ViewBaseData>("Open#MODULE#View", Open#MODULE#View);
 	        AddEventMsg("Close#MODULE#View", Close#MODULE#View);
 #EVENT#
         }
@@ -54,7 +54,7 @@ namespace App.Modules
 
         #region View Logic
         
-        private void Open#MODULE#View(object obj)
+        private void Open#MODULE#View(ViewBaseData baseData)
         {
             
         }

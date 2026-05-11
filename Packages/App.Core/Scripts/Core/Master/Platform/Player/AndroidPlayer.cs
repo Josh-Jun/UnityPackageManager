@@ -8,6 +8,8 @@ namespace App.Core.Master
     {
         private const string AppMainPackage = "com.unity3d.player.UnityPlayer";
         private const string AppToolsPackage = "com.debug.tools.AndroidHelper";
+        private const string AliPayPackage = "com.debug.tools.alipay.AliPay";
+        private const string WeChatPackage = "com.debug.tools.alipay.WeChat";
         private AndroidJavaObject MainJavaObject => JavaObject(AppMainPackage).GetStatic<AndroidJavaObject>("currentActivity");
         public override bool IsEditor { get; } = false;
         public override string Name { get; } = "Android";
@@ -58,19 +60,30 @@ namespace App.Core.Master
             }
 #endif
         }
-
+        private bool isInitWeChat;
         public override void WeChatPay(string appId, string partnerId, string prepayId, string nonceStr, string timeStamp, string package, string sign)
         {
             Log.I("WeChatPay Android");
 #if UNITY_ANDROID && !UNITY_EDITOR
-            
+            if (!isInitWeChat)
+            {
+                isInitWeChat = true;
+                JavaObject(WeChatPackage).CallStatic("init", MainJavaObject, appId);
+            }
+            JavaObject(WeChatPackage).CallStatic("Pay", partnerId, prepayId, nonceStr, timeStamp, sign);
 #endif
         }
-        public override void AliPay(string payOrder, string scheme)
+        private bool isInitAliPay;
+        public override void AliPay(string payOrder, string appId)
         {
             Log.I("AliPay Android");
 #if UNITY_IOS && !UNITY_EDITOR
-            
+            if (!isInitAliPay)
+            {
+                isInitAliPay = true;
+                JavaObject(AliPayPackage).CallStatic("init", MainJavaObject, appId);
+            }
+            JavaObject(AliPayPackage).CallStatic("Pay", payOrder);
 #endif
         }
         public override void OpenAppSetting()

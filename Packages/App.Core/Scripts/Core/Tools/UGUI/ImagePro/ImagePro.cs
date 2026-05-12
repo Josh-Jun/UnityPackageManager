@@ -13,20 +13,17 @@ namespace UnityEngine.UI
 {
     public class ImagePro : Image
     {
-        [SerializeField] [Range(0, 1)] private float _Radius;
+        [SerializeField] [Range(0, 1)] private float m_Radius;
 
-        public float Radius
-        {
-            get => _Radius;
-            set
-            {
-                _Radius = value;
-                Refresh();
-            }
-        }
+        [SerializeField] private bool m_UseBlur;
+        [SerializeField] [Range(1, 20)] private float m_ColorPower;
         
+        public bool UseBlur => m_UseBlur;
+
         private static readonly int SizeID = Shader.PropertyToID("_Size");
         private static readonly int RadiusID = Shader.PropertyToID("_Radius");
+        private static readonly int Blur = Shader.PropertyToID("_UseBlur");
+        private static readonly int ColorPower = Shader.PropertyToID("_ColorPower");
 
         private Shader _shader = null;
         private Material _material = null;
@@ -37,17 +34,15 @@ namespace UnityEngine.UI
             {
                 if (!_shader)
                 {
-                    _shader = Shader.Find($"UI/RoundedRectangle");
+                    _shader = Shader.Find($"UI/RoundedRectangleBlur");
                 }
 
-                if (!_material)
+                if (_material) return _material;
+                _material = new Material(_shader)
                 {
-                    _material = new Material(_shader)
-                    {
-                        name = "Rounded Rectangle"
-                    };
-                }
-
+                    name = "Rounded Rectangle Blur"
+                };
+                
                 return _material;
             }
         }
@@ -71,8 +66,10 @@ namespace UnityEngine.UI
                 material = Material;
             }
             var maxRadius = Mathf.Min(rectTransform.rect.size.x, rectTransform.rect.size.y) / 2;
-            material.SetFloat(RadiusID, Radius * maxRadius);
+            material.SetFloat(RadiusID, m_Radius * maxRadius);
             material.SetVector(SizeID, rectTransform.rect.size);
+            material.SetFloat(Blur, m_UseBlur ? 1 : 0);
+            material.SetFloat(ColorPower, m_ColorPower);
         }
     }
 }

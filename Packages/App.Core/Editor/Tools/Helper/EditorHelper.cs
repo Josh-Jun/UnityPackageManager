@@ -71,8 +71,23 @@ namespace App.Editor.Helper
         
         public static List<Type> GetAssemblyTypes<T>(string assemblyString = "App.Module")
         {
-            var assembly = Assembly.Load(assemblyString);
-            var types = assembly.GetTypes();
+            var types = new List<Type>();
+            try
+            {
+                var assembly = Assembly.Load(assemblyString);
+                var typeArray = assembly.GetTypes();
+                types.AddRange(typeArray);
+            }
+            catch (FileNotFoundException e)
+            {
+                UnityEngine.Debug.LogWarning($"Assembly {assemblyString} not found: {e.Message}");
+                return new List<Type>();
+            }
+            catch (Exception e)
+            {
+                UnityEngine.Debug.LogWarning($"GetAssemblyTypes failed: {e.Message}");
+                return new List<Type>();
+            }
             return types.Where(type => type.Name != typeof(T).Name && typeof(T).IsAssignableFrom(type)).ToList();
         }
 

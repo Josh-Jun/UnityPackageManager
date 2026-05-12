@@ -21,6 +21,8 @@ namespace UnityEditor.UI
     public class ImageProEditor : ImageEditor
     {
         private SerializedProperty radius;
+        private SerializedProperty useBlur;
+        private SerializedProperty colorPower;
         private ImagePro targetComponent;
         
         SerializedProperty m_Sprite;
@@ -34,7 +36,9 @@ namespace UnityEditor.UI
             base.OnEnable();
             EditorApplication.update += Excute;
             targetComponent = target as ImagePro;
-            radius = serializedObject.FindProperty("_Radius");
+            radius = serializedObject.FindProperty("m_Radius");
+            useBlur = serializedObject.FindProperty("m_UseBlur");
+            colorPower = serializedObject.FindProperty("m_ColorPower");
             
             m_Sprite                = serializedObject.FindProperty("m_Sprite");
             m_Type                  = serializedObject.FindProperty("m_Type");
@@ -62,6 +66,11 @@ namespace UnityEditor.UI
             AppearanceControlsGUI();
             RaycastControlsGUI();
             EditorGUILayout.PropertyField(radius);
+            EditorGUILayout.PropertyField(useBlur);
+            if (targetComponent.UseBlur)
+            {
+                EditorGUILayout.PropertyField(colorPower);
+            }
             MaskableControlsGUI();
 
             m_ShowTypePro.target = m_Sprite.objectReferenceValue != null;

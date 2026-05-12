@@ -7,8 +7,6 @@ namespace App.Core.Helper
 {
     public static partial class AppHelper
     {
-        public const bool AutoHotfix = false;
-        
         public static List<Type> GetAssemblyTypes<T>(string assemblyString = "App.Module")
         {
             var assembly = Global.AppConfig.AssetPlayMode != YooAsset.EPlayMode.EditorSimulateMode ? Global.AssemblyPairs[$"{assemblyString}"] : Assembly.Load(assemblyString);

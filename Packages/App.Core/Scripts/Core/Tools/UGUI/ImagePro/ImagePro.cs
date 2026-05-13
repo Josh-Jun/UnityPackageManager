@@ -13,7 +13,7 @@ namespace UnityEngine.UI
 {
     public class ImagePro : Image
     {
-        [SerializeField] [Range(0, 1)] private float m_Radius = 0;
+        [SerializeField] [Range(0, 1)] private float m_Radius;
 
         [SerializeField] private bool m_UseBlur;
         [SerializeField] [Range(1, 20)] private float m_ColorPower = 1;

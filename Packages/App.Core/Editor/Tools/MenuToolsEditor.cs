@@ -169,9 +169,6 @@ namespace App.Editor.Tools
             "LoadingScene.unity",
             "MainScene.unity",
             "RedDot.prefab",
-            "AskView.prefab",
-            "LoadingView.prefab",
-            "UpdateView.prefab",
         };
         private static List<FileInfo> GetFiles(string folder)
         {

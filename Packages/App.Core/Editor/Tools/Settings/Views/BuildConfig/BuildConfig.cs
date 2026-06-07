@@ -351,10 +351,10 @@ namespace App.Editor.View
             stringBuilder.AppendLine($"  \"{data.sheetName}s\": [");
 
             var sbs1 = new List<string>();
-            var sbs2 = new List<string>();
             for (var r = 6; r < data.datas.GetLength(0); r++)
             {
                 if ($"{data.datas[r, 1]}".Contains("#") || $"{data.datas[r, 2]}".Contains("#")) continue;
+                var sbs2 = new List<string>();
                 for (var c = 3; c < data.datas.GetLength(1); c++)
                 {
                     if ($"{data.datas[1, c]}".Contains("#") || $"{data.datas[2, c]}".Contains("#")) continue;

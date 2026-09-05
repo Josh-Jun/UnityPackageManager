@@ -21,7 +21,7 @@
       "dependencies": {}
     },
     "com.lvlvlv.app": {
-      "version": "file:App.Core",
+      "version": "file:App.Frame",
       "depth": 0,
       "source": "embedded",
       "dependencies": {

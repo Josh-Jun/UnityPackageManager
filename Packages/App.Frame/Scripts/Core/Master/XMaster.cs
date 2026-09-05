@@ -15,12 +15,8 @@ using UnityEngine;
 
 namespace App.Core.Master
 {
-    public partial class XRMaster : SingletonMonoEvent<XRMaster>
+    public partial class XMaster : SingletonMonoEvent<XMaster>
     {
-        private Transform XRRoot;
-        private void Awake()
-        {
-            XRRoot = this.FindComponent<Transform>("XR Root");
-        }
+        
     }
 }

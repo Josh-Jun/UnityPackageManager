@@ -17,7 +17,7 @@ public class TestClass : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        XRMaster.Instance.gameObject.SetActive(true);
+        XMaster.Instance.gameObject.SetActive(true);
     }
 
     // Update is called once per frame

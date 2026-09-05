@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.CompilerServices;
+using App.Runtime.Helper;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.UIElements;
@@ -25,12 +26,12 @@ namespace App.Editor.Helper
         public const int MENU_LEVEL = 1;
 
         public static string BaseEditorPath => "Packages/com.lvlvlv.app/Editor";
-        
+
         public static readonly string[] watchers = new[]
         {
             "Assets/Settings/AssetBundleCollectorSetting.asset"
         };
-        
+
         public static string Browse(bool isFullPath = false)
         {
             var newPath = EditorUtility.OpenFolderPanel("Browse Folder", Application.dataPath, string.Empty);
@@ -68,7 +69,7 @@ namespace App.Editor.Helper
             var obj = Activator.CreateInstance(type); //创建此类型实例
             return obj as IToolkitEditor;
         }
-        
+
         public static List<Type> GetAssemblyTypes<T>(string assemblyString = "App.Module")
         {
             var types = new List<Type>();
@@ -88,6 +89,7 @@ namespace App.Editor.Helper
                 UnityEngine.Debug.LogWarning($"GetAssemblyTypes failed: {e.Message}");
                 return new List<Type>();
             }
+
             return types.Where(type => type.Name != typeof(T).Name && typeof(T).IsAssignableFrom(type)).ToList();
         }
 
@@ -143,20 +145,32 @@ namespace App.Editor.Helper
         #region GameViewResolution
 
         private const int DefaultOrientation = 0;
-        private const int DefaultWidth = 1170;
-        private const int DefaultHeight = 2532;
         private static int CurrentOrientation = -1;
+        private static EnvironmentConfig EnvironmentConfig;
+
+        private static Vector2 DefaultGameResolution
+        {
+            get
+            {
+                if (EnvironmentConfig == null)
+                {
+                    EnvironmentConfig = AssetDatabase.LoadAssetAtPath<EnvironmentConfig>(EnvironmentConfigPath);
+                }
+
+                return EnvironmentConfig.GameResolution;
+            }
+        }
 
         public static void ChangeGameViewResolution(int orientation)
         {
             if (EditorUserBuildSettings.activeBuildTarget is not (BuildTarget.Android or BuildTarget.iOS)) return;
             if (CurrentOrientation == orientation) return;
             CurrentOrientation = orientation;
-            var width = orientation == 0 ? DefaultWidth : DefaultHeight;
-            var height = orientation == 0 ? DefaultHeight : DefaultWidth;
+            var width = orientation == 0 ? (int)DefaultGameResolution.x : (int)DefaultGameResolution.y;
+            var height = orientation == 0 ? (int)DefaultGameResolution.y : (int)DefaultGameResolution.x;
             SetGameViewSize(width, height);
         }
-        
+
         public static void SwitchGameViewResolution()
         {
             var orientation = CurrentOrientation > 0 ? 0 : 1;

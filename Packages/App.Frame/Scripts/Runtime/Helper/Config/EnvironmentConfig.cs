@@ -28,6 +28,10 @@ namespace  App.Runtime.Helper
         public string KeyaliasName;
         public string KeystorePass;
         public string KeyaliasPass;
+
+        [Space] 
+        [Header("Editor Game Resolution")]
+        public Vector2 GameResolution;
     }
     
     [Serializable]

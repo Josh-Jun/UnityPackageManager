@@ -22,7 +22,7 @@ using UnityEngine;
 
 namespace App.Core.Master
 {
-    public class DebugMaster : SingletonMono<DebugMaster>
+    public partial class DebugMaster : SingletonMono<DebugMaster>
     {
         private StringBuilder LogBuilder;
         private StringBuilder CacheLogBuilder;

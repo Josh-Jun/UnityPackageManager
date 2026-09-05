@@ -1,6 +1,6 @@
 # :briefcase: UnityPackageManager
 
-# App.Core
+# App.Frame
 https://github.com/Josh-Jun/UnityPackageManager.git?path=Packages/App.Frame
 https://gitee.com/shijun_z/UnityPackageManager.git?path=Packages/App.Frame
 

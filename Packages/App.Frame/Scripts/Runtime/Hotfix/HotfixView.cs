@@ -38,7 +38,7 @@ namespace App.Runtime.Hotfix
         private TextMeshProUGUI _text;
         private TextMeshProUGUI _progressText;
 
-        private const string HOTFIX_EVENT_ARG_CONFIG_PATH = "HotfixEventArgConfig";
+        private const string HOTFIX_EVENT_ARG_CONFIG_PATH = "Launcher/HotfixEventArgConfig";
         private CrossAssemblyEventArgConfig HotfixEventArgConfig;
 
         private void Awake()

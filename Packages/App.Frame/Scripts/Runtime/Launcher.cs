@@ -14,7 +14,7 @@ namespace App.Runtime
     public partial class Launcher : MonoBehaviour
     {
         private const string APP_CONFIG_PATH = "AppConfig";
-        private const string LAUNCHER_EVENT_ARG_CONFIG_PATH = "LauncherEventArgConfig";
+        private const string LAUNCHER_EVENT_ARG_CONFIG_PATH = "Launcher/LauncherEventArgConfig";
         private CancellationTokenSource cancel = new();
         private bool CanMoveNext = true;
         private CrossAssemblyEventArgConfig LauncherEventArgConfig;

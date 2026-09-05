@@ -156,9 +156,9 @@ namespace App.Editor.Tools
             ".shader",
             ".shadergraph",
             ".shadervariants",
-            ".meta", ".DS_Store",
+            ".meta",
+            ".DS_Store",
             ".bytes",
-            ".asset",
             ".lighting",
             ".exr",
         };

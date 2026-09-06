@@ -23,6 +23,10 @@ using UnityEditor;
 
 namespace App.Runtime.Hotfix
 {
+    public class HotfixEventData : CrossAssemblyEventDataBase
+    {
+        public Action callback;
+    }
     public partial class HotfixView : MonoBehaviour
     {
         public static HotfixView Instance;
@@ -34,9 +38,13 @@ namespace App.Runtime.Hotfix
         private TextMeshProUGUI _text;
         private TextMeshProUGUI _progressText;
 
+        private const string HOTFIX_EVENT_ARG_CONFIG_PATH = "Launcher/HotfixEventArgConfig";
+        private CrossAssemblyEventArgConfig HotfixEventArgConfig;
+
         private void Awake()
         {
             Instance = this;
+            HotfixEventArgConfig = Resources.Load<CrossAssemblyEventArgConfig>(HOTFIX_EVENT_ARG_CONFIG_PATH);
             _slider = transform.Find("Slider").GetComponent<Slider>();
             _text = transform.Find("Slider/Text").GetComponent<TextMeshProUGUI>();
             _progressText = transform.Find("Slider/Fill Area/Fill/Progress").GetComponent<TextMeshProUGUI>();
@@ -44,14 +52,17 @@ namespace App.Runtime.Hotfix
                 _slider.gameObject.SetActive(false);
         }
 
-        public void Startup(UnityAction callback)
+        public void Startup(Action callback)
         {
             if (PlayerPrefs.HasKey(Agreement) || !ShowAgreePanel)
             {
                 callback?.Invoke();
                 return;
             }
-            SendMessage("ShowAgreePanelEvent", callback);
+            HotfixEventArgConfig.Execute(new HotfixEventData()
+            {
+                callback = callback
+            });
         }
 
         public void SetDownloadProgress(DownloadUpdateData data)

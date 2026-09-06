@@ -10,8 +10,16 @@
 using System;
 using TMPro;
 using UnityEngine;
+using UnityEngine.Events;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
+using System.Collections;
+using UnityEngine.Networking;
 using YooAsset;
+
+#if UNITY_EDITOR
+using UnityEditor;
+#endif
 
 namespace App.Runtime.Hotfix
 {
@@ -36,7 +44,7 @@ namespace App.Runtime.Hotfix
                 _slider.gameObject.SetActive(false);
         }
 
-        public void Startup(Action callback)
+        public void Startup(UnityAction callback)
         {
             if (PlayerPrefs.HasKey(Agreement) || !ShowAgreePanel)
             {

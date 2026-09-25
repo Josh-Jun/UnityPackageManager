@@ -9,7 +9,7 @@
 using UnityEngine;
 using UnityEngine.Events;
 
-public class CrossAssemblyEventConfigBase<T> : ScriptableObject
+public class CrossAssemblyEventArgsConfigBase<T> : ScriptableObject
 {
     private readonly UnityEvent<T> _crossAssemblyEvent = new ();
 

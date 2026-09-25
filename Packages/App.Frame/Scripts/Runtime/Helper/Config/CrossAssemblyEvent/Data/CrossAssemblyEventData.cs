@@ -10,7 +10,7 @@
 using System;
 
 [Serializable]
-public class CrossAssemblyEventData
+public class CrossAssemblyEventArgsData
 {
     
 }

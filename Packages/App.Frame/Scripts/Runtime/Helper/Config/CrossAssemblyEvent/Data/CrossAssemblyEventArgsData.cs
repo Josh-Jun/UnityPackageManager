@@ -10,7 +10,7 @@
 using System;
 
 [Serializable]
-public class CrossAssemblyEventArgsData<T> : CrossAssemblyEventData
+public class CrossAssemblyEventArgsData<T> : CrossAssemblyEventArgsData
 {
     public T Arg;
     public CrossAssemblyEventArgsData(T arg)
@@ -20,7 +20,7 @@ public class CrossAssemblyEventArgsData<T> : CrossAssemblyEventData
 }
 
 [Serializable]
-public class CrossAssemblyEventArgsData<T1, T2> : CrossAssemblyEventData
+public class CrossAssemblyEventArgsData<T1, T2> : CrossAssemblyEventArgsData
 {
     public T1 Arg1;
     public T2 Arg2;
@@ -32,7 +32,7 @@ public class CrossAssemblyEventArgsData<T1, T2> : CrossAssemblyEventData
 }
 
 [Serializable]
-public class CrossAssemblyEventArgsData<T1, T2, T3> : CrossAssemblyEventData
+public class CrossAssemblyEventArgsData<T1, T2, T3> : CrossAssemblyEventArgsData
 {
     public T1 Arg1;
     public T2 Arg2;
@@ -46,7 +46,7 @@ public class CrossAssemblyEventArgsData<T1, T2, T3> : CrossAssemblyEventData
 }
 
 [Serializable]
-public class CrossAssemblyEventArgsData<T1, T2, T3, T4> : CrossAssemblyEventData
+public class CrossAssemblyEventArgsData<T1, T2, T3, T4> : CrossAssemblyEventArgsData
 {
     public T1 Arg1;
     public T2 Arg2;

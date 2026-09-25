@@ -8,8 +8,8 @@
  * */
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "CrossAssemblyEventArgConfig", menuName = "App/CrossAssemblyEventArgConfig")]
-public class CrossAssemblyEventArgConfig : CrossAssemblyEventConfigBase<CrossAssemblyEventData>
+[CreateAssetMenu(fileName = "CrossAssemblyEventArgsConfig", menuName = "App/CrossAssemblyEventArgsConfig")]
+public class CrossAssemblyEventArgsConfig : CrossAssemblyEventArgsConfigBase<CrossAssemblyEventArgsData>
 {
     
 }

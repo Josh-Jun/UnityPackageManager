@@ -31,12 +31,12 @@ namespace App.Runtime.Hotfix
         private TextMeshProUGUI _progressText;
 
         private const string HOTFIX_EVENT_ARG_CONFIG_PATH = "Launcher/HotfixEventArgConfig";
-        private CrossAssemblyEventArgConfig HotfixEventArgConfig;
+        private CrossAssemblyEventArgsConfig _hotfixEventArgsConfig;
 
         private void Awake()
         {
             Instance = this;
-            HotfixEventArgConfig = Resources.Load<CrossAssemblyEventArgConfig>(HOTFIX_EVENT_ARG_CONFIG_PATH);
+            _hotfixEventArgsConfig = Resources.Load<CrossAssemblyEventArgsConfig>(HOTFIX_EVENT_ARG_CONFIG_PATH);
             _slider = transform.Find("Slider").GetComponent<Slider>();
             _text = transform.Find("Slider/Text").GetComponent<TextMeshProUGUI>();
             _progressText = transform.Find("Slider/Fill Area/Fill/Progress").GetComponent<TextMeshProUGUI>();
@@ -51,7 +51,7 @@ namespace App.Runtime.Hotfix
                 callback?.Invoke();
                 return;
             }
-            HotfixEventArgConfig.Execute(new CrossAssemblyEventArgsData<Action>(callback));
+            _hotfixEventArgsConfig.Execute(new CrossAssemblyEventArgsData<Action>(callback));
         }
 
         public void SetDownloadProgress(DownloadUpdateData data)

@@ -10,11 +10,7 @@
 using System;
 using TMPro;
 using UnityEngine;
-using UnityEngine.Events;
-using UnityEngine.EventSystems;
 using UnityEngine.UI;
-using System.Collections;
-using UnityEngine.Networking;
 using YooAsset;
 
 #if UNITY_EDITOR
@@ -23,10 +19,6 @@ using UnityEditor;
 
 namespace App.Runtime.Hotfix
 {
-    public class HotfixEventData : CrossAssemblyEventDataBase
-    {
-        public Action callback;
-    }
     public partial class HotfixView : MonoBehaviour
     {
         public static HotfixView Instance;
@@ -59,10 +51,7 @@ namespace App.Runtime.Hotfix
                 callback?.Invoke();
                 return;
             }
-            HotfixEventArgConfig.Execute(new HotfixEventData()
-            {
-                callback = callback
-            });
+            HotfixEventArgConfig.Execute(new CrossAssemblyEventArgsData<Action>(callback));
         }
 
         public void SetDownloadProgress(DownloadUpdateData data)

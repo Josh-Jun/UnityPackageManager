@@ -21,6 +21,7 @@ namespace App.Runtime.Hotfix
 {
     public partial class HotfixView : MonoBehaviour
     {
+        public string EVENT_CONFIG_PATH = "Launcher/HotfixEventArgsConfig";
         public static HotfixView Instance;
         
         public bool ShowAgreePanel = true;
@@ -30,13 +31,12 @@ namespace App.Runtime.Hotfix
         private TextMeshProUGUI _text;
         private TextMeshProUGUI _progressText;
 
-        private const string HOTFIX_EVENT_ARG_CONFIG_PATH = "Launcher/HotfixEventArgsConfig";
         private CrossAssemblyEventArgsConfig HotfixEventArgsConfig;
 
         private void Awake()
         {
             Instance = this;
-            HotfixEventArgsConfig = Resources.Load<CrossAssemblyEventArgsConfig>(HOTFIX_EVENT_ARG_CONFIG_PATH);
+            HotfixEventArgsConfig = Resources.Load<CrossAssemblyEventArgsConfig>(EVENT_CONFIG_PATH);
             _slider = transform.Find("Slider").GetComponent<Slider>();
             _text = transform.Find("Slider/Text").GetComponent<TextMeshProUGUI>();
             _progressText = transform.Find("Slider/Fill Area/Fill/Progress").GetComponent<TextMeshProUGUI>();

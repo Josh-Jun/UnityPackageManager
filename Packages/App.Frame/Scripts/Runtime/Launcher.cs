@@ -9,7 +9,7 @@ namespace App.Runtime
     public partial class Launcher : MonoBehaviour
     {
         private const string APP_CONFIG_PATH = "AppConfig";
-        private const string LAUNCHER_EVENT_ARG_CONFIG_PATH = "Launcher/LauncherEventArgsConfig";
+        public string EVENT_CONFIG_PATH = "Launcher/LauncherEventArgsConfig";
         private bool CanMoveNext = true;
         private CrossAssemblyEventArgsConfig LauncherEventArgsConfig;
 
@@ -17,7 +17,7 @@ namespace App.Runtime
         {
             // 加载应用配置文件
             Global.AppConfig = Resources.Load<AppConfig>(APP_CONFIG_PATH);
-            LauncherEventArgsConfig = Resources.Load<CrossAssemblyEventArgsConfig>(LAUNCHER_EVENT_ARG_CONFIG_PATH);
+            LauncherEventArgsConfig = Resources.Load<CrossAssemblyEventArgsConfig>(EVENT_CONFIG_PATH);
             // 加载配置文件之后，热更之前事件
             LauncherEventArgsConfig.Execute(new CrossAssemblyEventArgsData<string>("LoadAppConfigCompletedEvent"));
             // 弹出隐私UI界面，启动脚本热更

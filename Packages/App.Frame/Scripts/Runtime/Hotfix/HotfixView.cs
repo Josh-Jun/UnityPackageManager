@@ -51,7 +51,7 @@ namespace App.Runtime.Hotfix
                 callback?.Invoke();
                 return;
             }
-            HotfixEventArgConfig.Execute(new CrossAssemblyEventArgsData<Action>(callback));
+            HotfixEventArgConfig.Execute(new CrossAssemblyEventArgData<Action>(callback));
         }
 
         public void SetDownloadProgress(DownloadUpdateData data)

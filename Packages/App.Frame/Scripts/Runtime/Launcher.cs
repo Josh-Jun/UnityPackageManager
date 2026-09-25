@@ -11,15 +11,15 @@ namespace App.Runtime
         private const string APP_CONFIG_PATH = "AppConfig";
         private const string LAUNCHER_EVENT_ARG_CONFIG_PATH = "Launcher/LauncherEventArgsConfig";
         private bool CanMoveNext = true;
-        private CrossAssemblyEventArgsConfig _launcherEventArgsConfig;
+        private CrossAssemblyEventArgsConfig LauncherEventArgsConfig;
 
         private void Awake()
         {
             // 加载应用配置文件
             Global.AppConfig = Resources.Load<AppConfig>(APP_CONFIG_PATH);
-            _launcherEventArgsConfig = Resources.Load<CrossAssemblyEventArgsConfig>(LAUNCHER_EVENT_ARG_CONFIG_PATH);
+            LauncherEventArgsConfig = Resources.Load<CrossAssemblyEventArgsConfig>(LAUNCHER_EVENT_ARG_CONFIG_PATH);
             // 加载配置文件之后，热更之前事件
-            _launcherEventArgsConfig.Execute(new CrossAssemblyEventArgsData<string>("LoadAppConfigCompletedEvent"));
+            LauncherEventArgsConfig.Execute(new CrossAssemblyEventArgsData<string>("LoadAppConfigCompletedEvent"));
             // 弹出隐私UI界面，启动脚本热更
             HotfixView.Instance.Startup(() =>
             {
@@ -27,13 +27,13 @@ namespace App.Runtime
                 YooAssets.Initialize();
                 UniTask.Void(async () =>
                 {
-                    _launcherEventArgsConfig.Execute(new CrossAssemblyEventArgsData<string>("HotfixBeforeEvent"));
+                    LauncherEventArgsConfig.Execute(new CrossAssemblyEventArgsData<string>("HotfixBeforeEvent"));
                     // 热更之前事件
                     await UniTask.WaitUntil(() => CanMoveNext);
                     // 创建默认包
                     await Assets.UpdatePackage(AssetPackage.BuiltinPackage, HotfixView.Instance.SetDownloadProgress, true);
                     // 热更之后事件
-                    _launcherEventArgsConfig.Execute(new CrossAssemblyEventArgsData<string>("HotfixAfterEvent"));
+                    LauncherEventArgsConfig.Execute(new CrossAssemblyEventArgsData<string>("HotfixAfterEvent"));
                     // 加载AppScene
                     await Assets.LoadSceneAsync(AssetPath.AppScene);
                 });

@@ -10,12 +10,6 @@
 using System;
 
 [Serializable]
-public class CrossAssemblyEventData
-{
-    
-}
-
-[Serializable]
 public class CrossAssemblyEventArgsData<T> : CrossAssemblyEventData
 {
     public T Arg;

@@ -25,3 +25,10 @@ https://gitee.com/Josh-Jun/UnityPackageManager.git?path=Packages/GifPlayer
 https://github.com/Josh-Jun/UnityPackageManager.git?path=Packages/UIVideoPlayer
 
 https://gitee.com/Josh-Jun/UnityPackageManager.git?path=Packages/UIVideoPlayer
+
+---
+
+# XLocalization
+https://github.com/Josh-Jun/UnityPackageManager.git?path=Packages/XLocalization
+
+https://gitee.com/Josh-Jun/UnityPackageManager.git?path=Packages/XLocalization

@@ -1,0 +1,19 @@
+{
+  "name": "com.lvlvlv.xlocalization",
+  "displayName": "XLocalization",
+  "version": "1.0.0",
+  "unity": "2019.4",
+  "description": "XLocalization",
+  "author": {
+    "name": "Josh-Jun",
+    "url": "https://github.com/Josh-Jun/"
+  },
+  "keywords": [
+    "language",
+    "localization"
+  ],
+  "dependencies": {
+    "com.unity.ugui": "1.0.0",
+    "com.unity.textmeshpro": "3.0.7"
+  }
+}

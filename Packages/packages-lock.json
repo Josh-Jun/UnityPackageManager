@@ -54,6 +54,15 @@
         "com.unity.ugui": "1.0.0"
       }
     },
+    "com.lvlvlv.xlocalization": {
+      "version": "file:XLocalization",
+      "depth": 0,
+      "source": "embedded",
+      "dependencies": {
+        "com.unity.ugui": "1.0.0",
+        "com.unity.textmeshpro": "3.0.7"
+      }
+    },
     "com.tuyoogame.yooasset": {
       "version": "2.3.18",
       "depth": 0,

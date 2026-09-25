@@ -19,7 +19,7 @@ namespace App.Runtime
             Global.AppConfig = Resources.Load<AppConfig>(APP_CONFIG_PATH);
             LauncherEventArgConfig = Resources.Load<CrossAssemblyEventArgConfig>(LAUNCHER_EVENT_ARG_CONFIG_PATH);
             // 加载配置文件之后，热更之前事件
-            LauncherEventArgConfig.Execute(new CrossAssemblyEventArgData<string>("LoadAppConfigCompletedEvent"));
+            LauncherEventArgConfig.Execute(new CrossAssemblyEventArgsData<string>("LoadAppConfigCompletedEvent"));
             // 弹出隐私UI界面，启动脚本热更
             HotfixView.Instance.Startup(() =>
             {
@@ -27,13 +27,13 @@ namespace App.Runtime
                 YooAssets.Initialize();
                 UniTask.Void(async () =>
                 {
-                    LauncherEventArgConfig.Execute(new CrossAssemblyEventArgData<string>("HotfixBeforeEvent"));
+                    LauncherEventArgConfig.Execute(new CrossAssemblyEventArgsData<string>("HotfixBeforeEvent"));
                     // 热更之前事件
                     await UniTask.WaitUntil(() => CanMoveNext);
                     // 创建默认包
                     await Assets.UpdatePackage(AssetPackage.BuiltinPackage, HotfixView.Instance.SetDownloadProgress, true);
                     // 热更之后事件
-                    LauncherEventArgConfig.Execute(new CrossAssemblyEventArgData<string>("HotfixAfterEvent"));
+                    LauncherEventArgConfig.Execute(new CrossAssemblyEventArgsData<string>("HotfixAfterEvent"));
                     // 加载AppScene
                     await Assets.LoadSceneAsync(AssetPath.AppScene);
                 });

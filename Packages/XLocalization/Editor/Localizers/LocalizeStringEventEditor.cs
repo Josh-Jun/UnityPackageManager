@@ -39,6 +39,26 @@ namespace XLocalization.Editor
                 {
                     _event.SetKey(array[new_index]);
                 }
+                EditorGUILayout.Space();
+                _event.UseArguments = EditorGUILayout.Toggle("UseArguments", _event.UseArguments);
+                if (_event.UseArguments)
+                {
+                    for (var i = 0; i < _event.Arguments.Count; i++)
+                    {
+                        EditorGUILayout.BeginHorizontal();
+                        _event.Arguments[i] = EditorGUILayout.TextField(_event.Arguments[i]);
+                        if (GUILayout.Button("-", GUILayout.Width(20)))
+                        {
+                            _event.Arguments.RemoveAt(i);
+                        }
+                        EditorGUILayout.EndHorizontal();
+                    }
+                    if (GUILayout.Button("+"))
+                    {
+                        _event.Arguments.Add("");
+                    }
+                }
+                EditorGUILayout.Space();
             }
             EditorGUILayout.PropertyField(updateString);
             

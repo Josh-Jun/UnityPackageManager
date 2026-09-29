@@ -27,6 +27,7 @@ namespace App.Editor.View
         private bool EnableLog = false;
         private DevelopmentMold DevelopmentMold = DevelopmentMold.Sandbox;
         private EPlayMode AssetPlayMode = EPlayMode.EditorSimulateMode;
+        private ViewLoadMold ViewLoadMold = ViewLoadMold.Full;
         private int AppFrameRate = 30;
         private ChannelPackage ChannelPackage = ChannelPackage.Default;
         private bool NativeApp = false;
@@ -40,6 +41,7 @@ namespace App.Editor.View
             var enable_log = root.Q<Toggle>("EnableLog");
             var development_mold = root.Q<EnumField>("DevelopmentMold");
             var asset_play_mode = root.Q<EnumField>("AssetPlayMode");
+            var view_load_mold = root.Q<EnumField>("ViewLoadMold");
             var app_frame_rate = root.Q<TextField>("AppFrameRate");
             var channel_package = root.Q<EnumField>("ChannelPackage");
             var full_builtin_package = root.Q<Toggle>("FullBuiltinPackage");
@@ -50,6 +52,7 @@ namespace App.Editor.View
             enable_log.value = EnableLog;
             development_mold.Init(DevelopmentMold);
             asset_play_mode.Init(AssetPlayMode);
+            view_load_mold.Init(ViewLoadMold);
             app_frame_rate.value = AppFrameRate.ToString();
             channel_package.Init(ChannelPackage);
             full_builtin_package.value = IsFullBuiltinPackage;
@@ -77,6 +80,12 @@ namespace App.Editor.View
             {
                 var mold = (EPlayMode)System.Enum.Parse(typeof(EPlayMode), evt.newValue);
                 AssetPlayMode = mold;
+            });
+            
+            view_load_mold.RegisterCallback<ChangeEvent<string>>((evt) =>
+            {
+                var mold = (ViewLoadMold)System.Enum.Parse(typeof(ViewLoadMold), evt.newValue);
+                ViewLoadMold = mold;
             });
             
             app_frame_rate.RegisterCallback<ChangeEvent<string>>((evt) => { AppFrameRate = int.Parse(evt.newValue); });
@@ -143,6 +152,7 @@ namespace App.Editor.View
                 EnableLog = AppConfig.EnableLog;
                 DevelopmentMold = AppConfig.DevelopmentMold;
                 AssetPlayMode = AppConfig.AssetPlayMode;
+                ViewLoadMold = AppConfig.ViewLoadMold;
                 AppFrameRate = AppConfig.AppFrameRate;
                 ChannelPackage = AppConfig.ChannelPackage;
                 NativeApp = AppConfig.NativeApp;
@@ -172,6 +182,7 @@ namespace App.Editor.View
             AppConfig.EnableLog = EnableLog;
             AppConfig.DevelopmentMold = DevelopmentMold;
             AppConfig.AssetPlayMode = AssetPlayMode;
+            AppConfig.ViewLoadMold = ViewLoadMold;
             AppConfig.AppFrameRate = AppFrameRate;
             AppConfig.ChannelPackage = ChannelPackage;
             AppConfig.NativeApp = NativeApp;

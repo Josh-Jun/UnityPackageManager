@@ -5,6 +5,7 @@ using UnityEngine;
 using App.Core.Helper;
 using App.Core.Master;
 using App.Core.Tools;
+using App.Runtime.Helper;
 using UnityEngine.SceneManagement;
 
 namespace App.Core
@@ -32,10 +33,11 @@ namespace App.Core
         /// <summary>启动App</summary>
         public static void StartApp()
         {
-            // 加载所有view
-            ViewMaster.Instance.InitViewScripts();
-            // 初始化所有的Event特性（必须在所有View加载完成后）
-            EventMaster.Instance.InitEventMethods(SceneLogicPairs);
+            if (Global.AppConfig.ViewLoadMold == ViewLoadMold.Full)
+            {
+                // 加载所有view
+                ViewMaster.Instance.InitViewScripts();
+            }
             // 初始化Global的Logic脚本的Begin方法
             ExecuteSceneMethods(AssetPath.Global, "Begin");
             Assets.LoadSceneAsync(AssetPath.MainScene);
@@ -52,6 +54,7 @@ namespace App.Core
                 if (!AppHelper.GetData<bool>(attribute.Name)) continue;
                 var obj = Activator.CreateInstance(type);
                 var logic = obj as ILogic;
+                EventMaster.Instance.AddEventMethods(logic);
                 if (!SceneLogicPairs.TryGetValue(attribute.Scene, out var pair))
                 {
                     var logics = new List<ILogic> { logic };
@@ -78,6 +81,18 @@ namespace App.Core
             {
                 var method = logic.GetType().GetMethod(methodName, types);
                 method?.Invoke(logic, args);
+                if(Global.AppConfig.ViewLoadMold != ViewLoadMold.AsScene) continue;
+                var obj = logic.GetType().GetCustomAttributes(typeof(LogicOfAttribute), false).FirstOrDefault();
+                if (obj is not LogicOfAttribute attribute) continue;
+                switch (methodName)
+                {
+                    case "Begin":
+                        ViewMaster.Instance.InitViewScript(attribute.Name);
+                        break;
+                    case "End":
+                        ViewMaster.Instance.RemoveViewScript(attribute.Name);
+                        break;
+                }
             }
         }
 

@@ -16,6 +16,8 @@ namespace App.Runtime.Helper
         public DevelopmentMold DevelopmentMold;
         [Tooltip("App资源加载模式")]
         public EPlayMode AssetPlayMode;
+        [Tooltip("View加载模式")]
+        public ViewLoadMold ViewLoadMold;
         /// <summary>
         ///  是否全量构建内置包（按需求设置）
         ///  1、True：BuiltinPackage和HotfixPackage全都放在包内，首次打开不会热更，包体会大一些
@@ -31,6 +33,14 @@ namespace App.Runtime.Helper
         public bool NativeApp;
         [Tooltip("云控Code")]
         public string CloudCtrlCode;
+    }
+
+    /// <summary>View加载模式</summary>
+    public enum ViewLoadMold
+    {
+        Full,
+        AsScene,
+        AsRequired    
     }
 
     /// <summary>App渠道包</summary>

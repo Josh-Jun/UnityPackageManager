@@ -5,6 +5,7 @@ using System;
 using System.Linq;
 using App.Core.Helper;
 using App.Core.Tools;
+using App.Runtime.Helper;
 using Cysharp.Threading.Tasks;
 
 namespace App.Core.Master
@@ -44,10 +45,12 @@ namespace App.Core.Master
     {
         #region Private Variable
 
-        private static readonly Dictionary<string, ViewBase> ViewPairs = new Dictionary<string, ViewBase>();
-
+        private static readonly Dictionary<string, ViewBase> ViewPairs = new();
+        
         private static readonly Stack<StepData> ViewStepStack = new();
-
+        
+        private static readonly Dictionary<string, Type> ViewTypes = new();
+        
         #region Go3D
 
         private GameObject GameObjectRoot; //3D游戏对象父物体
@@ -155,6 +158,8 @@ namespace App.Core.Master
             SafeAreaAdjuster();
 
             InitBackgroundImage(BackgroundImage2D.sprite);
+
+            InitAllViewTypes();
         }
 
         #region Private Function
@@ -252,6 +257,7 @@ namespace App.Core.Master
             };
             view.SetLayer(layerName);
             var vb = view.AddComponent(type) as ViewBase;
+            EventMaster.Instance.AddEventMethods(vb);
             if (vb) vb.Mold = attribute.View;
             view.SetActive(false);
             ViewPairs.Add(type.FullName!, vb);
@@ -289,6 +295,17 @@ namespace App.Core.Master
             if (ViewStepStack.Count > 0)
             {
                 ViewStepStack.Pop();
+            }
+        }
+
+        private void InitAllViewTypes()
+        {
+            var types = AppHelper.GetAssemblyTypes<ViewBase>();
+            foreach (var type in types)
+            {
+                var obj = type.GetCustomAttributes(typeof(ViewOfAttribute), false).FirstOrDefault();
+                if (obj is not ViewOfAttribute attribute) continue;
+                ViewTypes.Add(attribute.Name, type);
             }
         }
 
@@ -358,17 +375,31 @@ namespace App.Core.Master
 
         public void InitViewScripts()
         {
-            var types = AppHelper.GetAssemblyTypes<ViewBase>();
-            foreach (var type in types)
+            foreach (var type in ViewTypes)
             {
-                if (ViewPairs.ContainsKey(type.FullName!)) continue;
-                var obj = type.GetCustomAttributes(typeof(ViewOfAttribute), false).FirstOrDefault();
+                if (ViewPairs.ContainsKey(type.Value.FullName!)) continue;
+                var obj = type.Value.GetCustomAttributes(typeof(ViewOfAttribute), false).FirstOrDefault();
                 if (obj is not ViewOfAttribute attribute) continue;
                 if (!AppHelper.GetData<bool>(attribute.Name)) continue;
-                CreateView(type, attribute);
+                CreateView(type.Value, attribute);
             }
 
             InitRedDotView();
+        }
+        
+        public void InitViewScript(string attributeName)
+        {
+            if (!AppHelper.GetData<bool>(attributeName)) return;
+            if (!ViewTypes.TryGetValue(attributeName, out var type)) return;
+            var obj = type.GetCustomAttributes(typeof(ViewOfAttribute), false).FirstOrDefault();
+            if (obj is not ViewOfAttribute attribute) return;
+            CreateView(type, attribute);
+        }
+        
+        public void RemoveViewScript(string attributeName)
+        {
+            if (!ViewTypes.TryGetValue(attributeName, out var type)) return;
+            RemoveView(type.FullName);
         }
 
         public void InitRedDotView()
@@ -482,7 +513,7 @@ namespace App.Core.Master
 
             RemoveViewStep(view);
 
-            if (isClear)
+            if (isClear || Global.AppConfig.ViewLoadMold == ViewLoadMold.AsRequired)
             {
                 RemoveView(view);
             }
@@ -503,7 +534,7 @@ namespace App.Core.Master
 
             RemoveViewStep(view);
 
-            if (isClear)
+            if (isClear || Global.AppConfig.ViewLoadMold == ViewLoadMold.AsRequired)
             {
                 RemoveView(scriptName);
             }
@@ -517,7 +548,7 @@ namespace App.Core.Master
         {
             foreach (var view in ViewPairs)
             {
-                if (isClear)
+                if (isClear || Global.AppConfig.ViewLoadMold == ViewLoadMold.AsRequired)
                 {
                     RemoveView(view.Value);
                 }
@@ -570,6 +601,7 @@ namespace App.Core.Master
         {
             var scriptName = view.GetType().FullName;
             if (!ViewPairs.TryGetValue(scriptName!, out var pair)) return;
+            EventMaster.Instance.RemoveEventMethods(pair);
             var go = pair.gameObject;
             EventDispatcher.RemoveEventListener(go.name);
             Destroy(go);
@@ -579,6 +611,7 @@ namespace App.Core.Master
         public void RemoveView(string scriptName)
         {
             if (!ViewPairs.TryGetValue(scriptName!, out var pair)) return;
+            EventMaster.Instance.RemoveEventMethods(pair);
             var go = pair.gameObject;
             EventDispatcher.RemoveEventListener(go.name);
             Destroy(go);

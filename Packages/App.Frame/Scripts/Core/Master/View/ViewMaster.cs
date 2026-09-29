@@ -228,6 +228,7 @@ namespace App.Core.Master
 
         private ViewBase CreateView(Type type, ViewOfAttribute attribute)
         {
+            if(ViewPairs.ContainsKey(type.FullName!)) return ViewPairs[type.FullName];
             var go = AssetsMaster.Instance.LoadAssetSync<GameObject>(attribute.Location);
             if (!go) return null;
             var layer = attribute.View switch

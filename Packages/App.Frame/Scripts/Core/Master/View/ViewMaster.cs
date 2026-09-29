@@ -399,6 +399,11 @@ namespace App.Core.Master
         
         public void RemoveViewScript(string attributeName)
         {
+            if (attributeName == "Update")
+            {
+                RemoveView("App.Modules.UpdateView");
+                return;
+            }
             if (!ViewTypes.TryGetValue(attributeName, out var type)) return;
             RemoveView(type.FullName);
         }

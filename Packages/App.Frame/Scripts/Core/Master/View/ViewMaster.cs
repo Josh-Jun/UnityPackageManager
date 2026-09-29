@@ -513,7 +513,7 @@ namespace App.Core.Master
 
             RemoveViewStep(view);
 
-            if (isClear || Global.AppConfig.ViewLoadMold == ViewLoadMold.AsRequired)
+            if (isClear || Global.AppConfig.ViewLoadMold != ViewLoadMold.Full)
             {
                 RemoveView(view);
             }
@@ -534,7 +534,7 @@ namespace App.Core.Master
 
             RemoveViewStep(view);
 
-            if (isClear || Global.AppConfig.ViewLoadMold == ViewLoadMold.AsRequired)
+            if (isClear || Global.AppConfig.ViewLoadMold != ViewLoadMold.Full)
             {
                 RemoveView(scriptName);
             }
@@ -548,7 +548,7 @@ namespace App.Core.Master
         {
             foreach (var view in ViewPairs)
             {
-                if (isClear || Global.AppConfig.ViewLoadMold == ViewLoadMold.AsRequired)
+                if (isClear || Global.AppConfig.ViewLoadMold != ViewLoadMold.Full)
                 {
                     RemoveView(view.Value);
                 }

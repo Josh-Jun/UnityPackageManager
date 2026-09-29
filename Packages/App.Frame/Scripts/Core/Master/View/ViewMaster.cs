@@ -399,11 +399,6 @@ namespace App.Core.Master
         
         public void RemoveViewScript(string attributeName)
         {
-            if (attributeName == "Update")
-            {
-                RemoveView("App.Modules.UpdateView");
-                return;
-            }
             if (!ViewTypes.TryGetValue(attributeName, out var type)) return;
             RemoveView(type.FullName);
         }
@@ -433,6 +428,12 @@ namespace App.Core.Master
             if (!AppHelper.GetData<bool>(attribute.Name)) return null;
             var view = CreateView(type, attribute);
             return view as T;
+        }
+
+        public void RemoveView<T>() where T : ViewBase
+        {
+            var type = AppHelper.GetAssemblyType<T>();
+            RemoveView(type.FullName);
         }
 
         public List<ViewBase> GetAllView()
